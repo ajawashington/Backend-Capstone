@@ -9,6 +9,7 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
 <table class="table">
     <thead>
         <tr>
@@ -65,7 +66,7 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BarterType.Title)
+            <a href='@Url.Action("Search","Home")?searchBar=@item.BarterType.Title'>@item.BarterType.Title</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Value)

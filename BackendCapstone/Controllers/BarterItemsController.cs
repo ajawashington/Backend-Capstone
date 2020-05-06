@@ -34,14 +34,14 @@ namespace BackendCapstone.Controllers
         // GET: BarterItems
         public async Task<IActionResult> Index()
         {
-            //var user = await GetCurrentUserAsync();
-            var products = await _context.BarterItem
-                //.Where(bi => bi.AppUserId == user.Id)
+            var user = await GetCurrentUserAsync();
+            var barterItems = await _context.BarterItem
+                .Where(bi => bi.AppUserId != user.Id)
                 .Include(bi => bi.AppUser)
                 .Include(bi => bi.BarterType)
                 .ToListAsync();
 
-            return View(products);
+            return View(barterItems);
         }
 
         // GET: BarterItems/Details/5

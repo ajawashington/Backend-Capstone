@@ -1,0 +1,77 @@
+﻿@model IEnumerable<BackendCapstone.Models.BarterItem>
+
+@{
+    ViewData["Title"] = "Search";
+}
+
+<h1>Search Results</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser.TagName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BarterType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser.Location)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                @if (item.ImagePath == null)
+                {
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ImagePath)
+                    </td>
+                }
+                else
+                {
+                    <td>
+                        <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
+                            <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
+                        </a>
+                    </td>
+                }
+                <td>
+                    <a href="@Url.Action("Details", "Profile",  new { Id = item.AppUserId })">
+                        @Html.DisplayFor(modelItem => item.AppUser.TagName)
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BarterType.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AppUser.Location)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -99,7 +99,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d4020c8-58cd-4882-a5b8-e5a6cf964557",
+                            ConcurrencyStamp = "af402944-fb09-45f9-80c1-fb0d5540af15",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -107,7 +107,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM7pVVKJ0fxgqTK8kPzrcclnPegqWhH5vpqtdLlZu34vUJwX8s9kCejupei8MFDVvQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEF9HCYa55p5CqfOyF1UN0HlW/GLLJovMLmgsgEHOtrSaAZjW0O5Ho96x728KRq3v8Q==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",

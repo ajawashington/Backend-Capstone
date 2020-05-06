@@ -19,17 +19,19 @@ namespace BackendCapstone.Models
         }
 
         [Required]
+        [Display (Name = "Username") ]
         public string TagName { get; set; }
 
         [Required]
         public string Location { get; set; }
 
+        [Display(Name = " ")]
         public string ImagePath { get; set; }
 
         [NotMapped]
         public IFormFile ImageFile { get; set; }
 
-        [NotMapped]
+     
        public virtual ICollection<BarterItem> MyBarterItems { get; set; }
 
         [NotMapped]

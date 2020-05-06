@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@inject SignInManager<ApplicationUser> signInManager;
+@inject UserManager<ApplicationUser> userManager;
+
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -23,8 +27,29 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="BarterItems" asp-action="Index">Barter Items</a>
                         </li>
+
+
+                        @if (signInManager.IsSignedIn(User))
+                        {
+                            // Get the current logged in user
+                            Task<ApplicationUser> GetCurrentUserAsync() => userManager.GetUserAsync(User);
+
+                            var user = await GetCurrentUserAsync();
+
+                            var AppUserId = user.Id;
+                
+
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Profile" asp-action="Details" asp-route-id="@AppUserId">My Profile</a>
+                            </li>
+                        }
+
+                        <form class="nav-item">
+                            <input class="form-control mr-sm-2" type="text" placeholder="Search" name="searchBar" />
+                            <button class="btn btn-primary my-2 my-sm-0" type="submit" asp-controller="Home" asp-action="Search">Search</button>
+                        </form>
                     </ul>
                 </div>
             </div>

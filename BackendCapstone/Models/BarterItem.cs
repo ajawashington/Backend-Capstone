@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace BackendCapstone.Models
         [Required]
         public int BarterTypeId { get; set; }
 
+        [Display(Name = "Barter Type")]
         public BarterType BarterType { get; set; }
 
         [Required]
@@ -36,6 +38,8 @@ namespace BackendCapstone.Models
         public IFormFile ImageFile { get; set; }
 
         [Required]
+        [Range(1, 5, ErrorMessage = "Value must be between 1 - 5")]
+        [Display(Name = "Value", Description = "5 point scale, 1 - 3 abundant, 4 - 5 sacre")]
         public int Value { get; set; }
         //"scarce" (4-5) or "abundant (1-3)"
 

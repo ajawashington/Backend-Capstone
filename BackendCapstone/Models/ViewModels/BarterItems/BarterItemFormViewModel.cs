@@ -1,17 +1,18 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models
+namespace BackendCapstone.Models.ViewModels.BarterItems
 {
-    public class BarterItem
+    public class BarterItemFormViewModel
     {
-        [Key]
+
+  
         public int BarterItemId { get; set; }
 
         [Required]
@@ -20,10 +21,6 @@ namespace BackendCapstone.Models
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public int BarterTypeId { get; set; }
-
-        public BarterType BarterType { get; set; }
 
         [Required]
         public string AppUserId { get; set; }
@@ -33,7 +30,7 @@ namespace BackendCapstone.Models
         [Display(Name = " ")]
         public string ImagePath { get; set; }
 
-        [NotMapped]
+
         public IFormFile ImageFile { get; set; }
 
         [Required]
@@ -48,7 +45,19 @@ namespace BackendCapstone.Models
         [Display(Name = "Is Available")]
         public bool IsAvailable { get; set; }
 
-        [NotMapped]
+        [Required]
+        public int BarterTypeId { get; set; }
+
+        public BarterType BarterType { get; set; }
+        public List<SelectListItem> BarterTypeOptions { get; set; }
         public virtual ICollection<BarterTrade> AssociatedTrades { get; set; }
+
+        public BarterItemFormViewModel()
+        {
+            IsAvailable = true;
+        }
+
+
+
     }
 }

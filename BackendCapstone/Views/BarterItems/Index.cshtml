@@ -13,6 +13,12 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser.TagName)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
@@ -22,16 +28,10 @@
                 @Html.DisplayNameFor(model => model.BarterType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ImagePath)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Value)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Quantity)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsAvailable)
+                @Html.DisplayNameFor(model => model.AppUser.Location)
             </th>
             <th></th>
         </tr>
@@ -48,12 +48,16 @@
             else
             {
                 <td>
-                    @Html.DisplayNameFor(modelItem => item.ImagePath)
                     <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
                         <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
                     </a>
                 </td>
             }
+            <td>
+                <a href="@Url.Action("Details", "Profile",  new { Id = item.AppUserId })">
+                    @Html.DisplayFor(modelItem => item.AppUser.TagName)
+                </a>
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
@@ -67,10 +71,7 @@
                 @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsAvailable)
+                @Html.DisplayFor(modelItem => item.AppUser.Location)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.BarterItemId">Edit</a> |

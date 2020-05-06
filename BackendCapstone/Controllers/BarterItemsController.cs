@@ -34,9 +34,10 @@ namespace BackendCapstone.Controllers
         // GET: BarterItems
         public async Task<IActionResult> Index()
         {
-            var user = await GetCurrentUserAsync();
+            //var user = await GetCurrentUserAsync();
             var products = await _context.BarterItem
-                .Where(bi => bi.AppUserId == user.Id)
+                //.Where(bi => bi.AppUserId == user.Id)
+                .Include(bi => bi.AppUser)
                 .Include(bi => bi.BarterType)
                 .ToListAsync();
 
@@ -101,7 +102,7 @@ namespace BackendCapstone.Controllers
                 
                 if (viewModelItem.ImageFile != null && viewModelItem.ImageFile.Length > 0)
                 {
-                    //creates the file name
+                
                     var fileName = Guid.NewGuid().ToString() + Path.GetFileName(viewModelItem.ImageFile.FileName);
                     var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
 
@@ -143,9 +144,7 @@ namespace BackendCapstone.Controllers
             return View(barterItem);
         }
 
-        // POST: BarterItems/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("BarterItemId,Title,Description,BarterTypeId,AppUserId,ImagePath,Value,Quantity,IsAvailable")] BarterItem barterItem)

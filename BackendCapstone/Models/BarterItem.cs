@@ -23,6 +23,7 @@ namespace BackendCapstone.Models
         [Required]
         public int BarterTypeId { get; set; }
 
+        [Display(Name = "Barter Type")]
         public BarterType BarterType { get; set; }
 
         [Required]

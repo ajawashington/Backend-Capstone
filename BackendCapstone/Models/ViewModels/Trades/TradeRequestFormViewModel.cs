@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models.ViewModels.Trade
+namespace BackendCapstone.Models.ViewModels.Trades
 {
     public class TradeRequestFormViewModel
     {

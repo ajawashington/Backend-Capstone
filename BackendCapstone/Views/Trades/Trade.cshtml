@@ -1,0 +1,39 @@
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeWithItemsViewModel
+
+@{
+    ViewData["Title"] = "Trade";
+}
+
+<h1>Trade</h1>
+
+<h4>Trade</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Trade">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TradeId" />
+
+            @*@using (var biList = new BarterTrade())
+            {
+                var barterItemList = biList.Trade.Receiver.MyBarterItems.ToList();
+                foreach (var item in barterItemList)
+                {
+                    <tr name="@item.Title">
+                        <td>@item.Description</td>
+                        <td>@item.Value</td>
+                        <td>@Html.CheckBox(item.BarterItemId, new { @id = item.BarterItemId, onclick = "complete($(this))" })</td>
+                    </tr>
+                }
+            }*@
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

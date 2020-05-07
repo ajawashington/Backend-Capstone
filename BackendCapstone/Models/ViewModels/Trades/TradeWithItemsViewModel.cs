@@ -1,12 +1,14 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models
+namespace BackendCapstone.Models.ViewModels.Trades
 {
-    public class BarterTrade 
+    public class TradeWithItemsViewModel
     {
         [Key]
         public int BarterTradeId { get; set; }
@@ -23,5 +25,6 @@ namespace BackendCapstone.Models
         [Required]
         public Trade Trade { get; set; }
 
+        public List<SelectListItem> ReceieverBarterItems { get; set; }
     }
 }

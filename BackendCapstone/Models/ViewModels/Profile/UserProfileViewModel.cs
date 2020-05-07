@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Storage;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -13,5 +14,9 @@ namespace BackendCapstone.Models.ViewModels.Profile
 
         [Display(Name = "Barter Items")]
         public List<BarterItem> BarterItems { get; set; }
+
+        public List<Trade> ReceivedTrades { get; set; }
+
+        public List<Trade> SentTrades { get; set; }
     }
 }

@@ -34,10 +34,10 @@ namespace BackendCapstone.Models
      
        public virtual ICollection<BarterItem> MyBarterItems { get; set; }
 
-        [NotMapped]
+        //[NotMapped]
         public virtual ICollection<Trade> ReceivedTrades { get; set; }
 
-        [NotMapped]
+        //[NotMapped]
         public virtual ICollection<Trade> SentTrades { get; set; }
     }
 }

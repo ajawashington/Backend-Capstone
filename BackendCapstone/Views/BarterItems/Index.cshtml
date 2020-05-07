@@ -17,10 +17,10 @@
                 @Html.DisplayNameFor(model => model.ImagePath)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.AppUser.TagName)
+                @Html.DisplayNameFor(model => model.Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Title)
+                @Html.DisplayNameFor(model => model.AppUser.TagName)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Description)
@@ -45,6 +45,16 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ImagePath)
                 </td>
+                <td>
+                    <a asp-controller="BarterItems" asp-action="Details" asp-route-id="@item.BarterItemId">
+                        @Html.ActionLink(item.Title, // <-- Link text
+                        "Details", // <-- Action Method Name
+                        "BarterItems", // <-- Controller Name
+                        new { Id = item.BarterItemId }, // <-- Route value
+                        null // <-- htmlArguments
+                        )
+                    </a>
+                </td>
             }
             else
             {
@@ -53,6 +63,9 @@
                         <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
                     </a>
                 </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
             }
             <td>
                 <a href="@Url.Action("Details", "Profile",  new { Id = item.AppUserId })">
@@ -60,24 +73,16 @@
                 </a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-            <a href='@Url.Action("Search","Home")?searchBar=@item.BarterType.Title'>@item.BarterType.Title</a>
+                <a href='@Url.Action("Search","Home")?searchBar=@item.BarterType.Title'>@item.BarterType.Title</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.AppUser.Location)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.BarterItemId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.BarterItemId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.BarterItemId">Delete</a>
             </td>
         </tr>
 }

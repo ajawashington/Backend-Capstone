@@ -23,6 +23,7 @@ namespace BackendCapstone.Data
             // Customize the ASP.NET Identity model and override the defaults if needed.
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
+
             modelBuilder.Entity<Trade>()
                 .Property(b => b.DateCreated)
                 .HasDefaultValueSql("GETDATE()");
@@ -38,6 +39,18 @@ namespace BackendCapstone.Data
                 .HasMany(o => o.AssociatedTrades)
                 .WithOne(l => l.BarterItem)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<BarterItem>()
+                .HasMany(o => o.AssociatedTrades)
+                .WithOne(l => l.BarterItem)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Trade>()
+         .HasMany(o => o.BarterTrades)
+         .WithOne(l => l.Trade)
+         .OnDelete(DeleteBehavior.Cascade);
+
+
 
             ApplicationUser user = new ApplicationUser
             {
@@ -125,6 +138,52 @@ namespace BackendCapstone.Data
                       Value = 5
                   }
             );
+            modelBuilder.Entity<Trade>().HasData(
+
+             new Trade()
+             {
+
+                 TradeId = 3,
+                 ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                 SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff",
+                 Message = "Hello, I love your products, Would really like to have some of those mushrooms"
+             },
+             new Trade()
+             {
+
+                 TradeId = 4,
+                 ReceiverId = "00000000 - ffff - ffff - ffff - ffffffffffff",
+                 SenderId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                 Message = "Hello, I love your products, Would really like to have some of those mushrooms"
+             },
+             new Trade()
+             {
+
+                 TradeId = 5,
+                 ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                 SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff",
+                 Message = "Hello, I love your products, Would really like to have some of those mushrooms"
+             }
+             );
+
+            modelBuilder.Entity<BarterTrade>().HasData(
+
+               new BarterTrade()
+               {
+
+                   BarterTradeId = 1,
+                   BarterItemId = 3,
+                   TradeId = 4
+               },
+               new BarterTrade()
+               {
+
+                   BarterTradeId = 2,
+                   BarterItemId = 4,
+                   TradeId = 4
+               }
+              );
+
 
 
         }

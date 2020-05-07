@@ -4,14 +4,16 @@ using BackendCapstone.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BackendCapstone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200507190537_Clear")]
+    partial class Clear
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,7 +101,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c3335003-c619-462f-a412-d86ad14ce757",
+                            ConcurrencyStamp = "31da68d7-b518-4b67-be77-71f8d43e4613",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -107,7 +109,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHUi1zeNBbKWcY0q3UdSbBGaDW07nvYihtzlrnsN65l5nYBrNgeZapkkE8IFw3Nm4Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEDFnR60/0Zorc8b+NDLbgua13r7iqGnNCuxS1pWZtuKFV4BVnffgsQxRWJzUvJJXnA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -225,20 +227,6 @@ namespace BackendCapstone.Migrations
                     b.HasIndex("TradeId");
 
                     b.ToTable("BarterTrade");
-
-                    b.HasData(
-                        new
-                        {
-                            BarterTradeId = 1,
-                            BarterItemId = 3,
-                            TradeId = 4
-                        },
-                        new
-                        {
-                            BarterTradeId = 2,
-                            BarterItemId = 4,
-                            TradeId = 4
-                        });
                 });
 
             modelBuilder.Entity("BackendCapstone.Models.BarterType", b =>
@@ -316,35 +304,6 @@ namespace BackendCapstone.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Trade");
-
-                    b.HasData(
-                        new
-                        {
-                            TradeId = 3,
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsCompleted = false,
-                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
-                            ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
-                            SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff"
-                        },
-                        new
-                        {
-                            TradeId = 4,
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsCompleted = false,
-                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
-                            ReceiverId = "00000000 - ffff - ffff - ffff - ffffffffffff",
-                            SenderId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400"
-                        },
-                        new
-                        {
-                            TradeId = 5,
-                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            IsCompleted = false,
-                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
-                            ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
-                            SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff"
-                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>

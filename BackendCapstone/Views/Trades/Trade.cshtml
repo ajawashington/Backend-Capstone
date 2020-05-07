@@ -14,18 +14,16 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TradeId" />
 
-            @*@using (var biList = new BarterTrade())
-            {
-                var barterItemList = biList.Trade.Receiver.MyBarterItems.ToList();
-                foreach (var item in barterItemList)
+   
+                @foreach (var item in Model.SelectedItems)
                 {
                     <tr name="@item.Title">
                         <td>@item.Description</td>
                         <td>@item.Value</td>
-                        <td>@Html.CheckBox(item.BarterItemId, new { @id = item.BarterItemId, onclick = "complete($(this))" })</td>
+                        <td>@Html.CheckBoxFor(i => item.IsSelected)</td>
                     </tr>
                 }
-            }*@
+            
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

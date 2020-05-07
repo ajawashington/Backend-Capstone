@@ -99,7 +99,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c3335003-c619-462f-a412-d86ad14ce757",
+                            ConcurrencyStamp = "138f7e61-4465-44de-826f-65d3165bb945",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -107,7 +107,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEHUi1zeNBbKWcY0q3UdSbBGaDW07nvYihtzlrnsN65l5nYBrNgeZapkkE8IFw3Nm4Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECBJnwbZrAUKqjdpGJBMpfR2rS6H/mdNfvQM1z+jXqfump3sM0FB6v5Z/ai/nxHwSQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -515,13 +515,13 @@ namespace BackendCapstone.Migrations
             modelBuilder.Entity("BackendCapstone.Models.Trade", b =>
                 {
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Receiver")
-                        .WithMany()
+                        .WithMany("ReceivedTrades")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Sender")
-                        .WithMany()
+                        .WithMany("SentTrades")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -35,7 +35,6 @@ namespace BackendCapstone.Models
         [NotMapped]
         public List<int> TradeValue { get; set; }
 
-        [NotMapped]
         public virtual ICollection<BarterTrade> BarterTrades { get; set; }
     }
 }

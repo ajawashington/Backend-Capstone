@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
 using BackendCapstone.Data;
 using BackendCapstone.Models;
@@ -79,7 +80,7 @@ namespace BackendCapstone.Controllers
                 _context.Trade.Add(trade);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Trade));
+                return RedirectToAction(nameof(Trade), new { receiverId = trade.ReceiverId, tradeId = trade.TradeId });
             }
             catch
             {
@@ -87,58 +88,66 @@ namespace BackendCapstone.Controllers
             }
         }
         // GET: Trades/Edit/5
-        public async Task<ActionResult> Trade(Trade trade)
+        public async Task<ActionResult> Trade(int tradeId, string receiverId)
         {
             var receiverBarterItems = await _context.BarterItem
-                .Where(bi => bi.AppUserId == trade.ReceiverId)
-              .Select(bt => new SelectListItem() { Text = bt.Title, Value = bt.BarterItemId.ToString() })
+                .Where(bi => bi.AppUserId == receiverId)
               .ToListAsync();
+
+            var checkboxItems = receiverBarterItems.Select(cbi => new BarterItemSelectViewModel()
+            {
+                Title = cbi.Title, 
+                Description = cbi.Description,
+                ImagePath = cbi.ImagePath,
+                Value = cbi.Value,
+                IsSelected = false
+            }
+            );
 
             var viewModel = new TradeWithItemsViewModel
             {
-                TradeId = trade.TradeId
+                TradeId = tradeId,
+                SelectedItems = checkboxItems.ToList()
                 
             };
-
-            viewModel.ReceieverBarterItems = receiverBarterItems;
 
             return View(viewModel);
         }
 
-        // POST: Trades/Trade/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Trade(int TradeId, TradeWithItemsViewModel viewModelItem)
-        {
-            try
-            {
-                //need to pass through receiverId to get the users items, pass through the tradeRequest
-                var user = await GetCurrentUserAsync();
+        //// POST: Trades/Trade/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Trade(int TradeId, TradeWithItemsViewModel viewModelItem)
+        //{
+        //    try
+        //    {
+        //        //need to pass through receiverId to get the users items, pass through the tradeRequest
+        //        var user = await GetCurrentUserAsync();
 
 
-                var tradeRequestExists = _context.Trade.FirstOrDefault(t => t.TradeId == TradeId && t.BarterTrades == null);
+        //        var tradeRequestExists = _context.Trade.FirstOrDefault(t => t.TradeId == TradeId && t.BarterTrades == null);
 
-                while (tradeRequestExists == null)
-                {
+        //        while (tradeRequestExists == null)
+        //        {
 
-                    var newBarterItems = new BarterTrade
-                    {
-                        BarterItemId = viewModelItem.BarterItemId
-                    };
+        //            var newBarterItems = new BarterTrade
+        //            {
+        //                BarterItemId = viewModelItem.BarterItemId
+        //            };
 
-                    _context.BarterTrade.Add(newBarterItems);
-                    await _context.SaveChangesAsync();
+        //            _context.BarterTrade.Add(newBarterItems);
+        //            await _context.SaveChangesAsync();
 
-                }
+        //        }
 
 
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    catch
+        //    {
+        //        return View();
+        //    }
+        //}
 
         //// GET: Orders/Edit/5
         //public async Task<ActionResult> Edit(int id)

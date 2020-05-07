@@ -46,9 +46,19 @@ namespace BackendCapstone.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Trade>()
-         .HasMany(o => o.BarterTrades)
-         .WithOne(l => l.Trade)
-         .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(o => o.BarterTrades)
+                .WithOne(l => l.Trade)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(au => au.ReceivedTrades)
+                .WithOne(t => t.Receiver);
+
+            modelBuilder.Entity<ApplicationUser>()
+               .HasMany(au => au.SentTrades)
+               .WithOne(t => t.Sender);
+
+
 
 
 

@@ -14,17 +14,13 @@ namespace BackendCapstone.Models.ViewModels.Trades
         public int BarterTradeId { get; set; }
 
         [Required]
-        public int BarterItemId { get; set; }
-
-        [Required]
-        public BarterItem BarterItem { get; set; }
-
-        [Required]
         public int TradeId { get; set; }
 
         [Required]
         public Trade Trade { get; set; }
 
-        public List<SelectListItem> ReceieverBarterItems { get; set; }
+        public List<BarterItemSelectViewModel> SelectedItems { get; set; }
+
+        //count of barterItems value 
     }
 }

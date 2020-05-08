@@ -30,9 +30,20 @@ namespace BackendCapstone.Controllers
             _userManager = userManager;
         }
         // GET: Trades
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var user = await GetCurrentUserAsync();
+
+            var trade = await _context.Trade
+                .Where(t => t.SenderId == user.Id)
+                .Include(t => t.Receiver)
+                .Include(t => t.BarterTrades)
+                .ThenInclude(bt => bt.BarterItem)
+                .ToListAsync();
+
+            return View(trade);
+
+
         }
 
         // GET: Trades/Details/5

@@ -69,7 +69,7 @@
                 @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AppUser.Location)
+                <a href='@Url.Action("Search","Home")?searchBar=@item.AppUser.Location'>@item.AppUser.Location</a>
             </td>
         </tr>
         }

@@ -14,16 +14,15 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TradeId" />
 
-   
-                @foreach (var item in Model.SelectedItems)
-                {
-                    <tr name="@item.Title">
-                        <td>@item.Description</td>
-                        <td>@item.Value</td>
-                        <td>@Html.CheckBoxFor(i => item.IsSelected)</td>
-                    </tr>
-                }
-            
+
+            @for (var i = 0; i < Model.SelectedItems.Count; i++)
+            {
+                @Html.CheckBoxFor(item => Model.SelectedItems[i].IsSelected)
+                <input type="hidden" asp-for="@Model.SelectedItems[i].BarterItemId"/>
+                <td>@Model.SelectedItems[i].Title</td>
+                <td>@Model.SelectedItems[i].Value</td>
+            }
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>

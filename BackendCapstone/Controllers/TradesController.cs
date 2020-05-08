@@ -88,7 +88,7 @@ namespace BackendCapstone.Controllers
             }
         }
         // GET: Trades/Edit/5
-        public async Task<ActionResult> Trade(int tradeId, string receiverId)
+        public async Task<ActionResult> Trade(int tradeId, string receiverId, List<int> SelectedItemInput)
         {
             var receiverBarterItems = await _context.BarterItem
                 .Where(bi => bi.AppUserId == receiverId)
@@ -96,11 +96,13 @@ namespace BackendCapstone.Controllers
 
             var checkboxItems = receiverBarterItems.Select(cbi => new BarterItemSelectViewModel()
             {
-                Title = cbi.Title, 
+                Title = cbi.Title,
                 Description = cbi.Description,
                 ImagePath = cbi.ImagePath,
                 Value = cbi.Value,
+                BarterItemId = cbi.BarterItemId,
                 IsSelected = false
+               
             }
             );
 
@@ -108,46 +110,38 @@ namespace BackendCapstone.Controllers
             {
                 TradeId = tradeId,
                 SelectedItems = checkboxItems.ToList()
-                
             };
 
             return View(viewModel);
         }
 
-        //// POST: Trades/Trade/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<ActionResult> Trade(int TradeId, TradeWithItemsViewModel viewModelItem)
-        //{
-        //    try
-        //    {
-        //        //need to pass through receiverId to get the users items, pass through the tradeRequest
-        //        var user = await GetCurrentUserAsync();
+        // POST: Trades/Trade/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Trade([Bind("SelectedItems,TradeId")] TradeWithItemsViewModel viewModelItem)
+        {
+            try
+            {
+                var tradeRequestExists = _context.Trade.FirstOrDefault(o => o.TradeId == viewModelItem.TradeId);
+                var barterTradeItems = viewModelItem.SelectedItems.Where(vmi => vmi.IsSelected == true)
+                    .Select(si => new BarterTrade 
+                    { 
+                        BarterItemId = si.BarterItemId,
+                        TradeId = tradeRequestExists.TradeId
+                    });
 
+                tradeRequestExists.BarterTrades = barterTradeItems.ToList();
+                    
+                    _context.Trade.Update(tradeRequestExists);
+                    await _context.SaveChangesAsync();
 
-        //        var tradeRequestExists = _context.Trade.FirstOrDefault(t => t.TradeId == TradeId && t.BarterTrades == null);
-
-        //        while (tradeRequestExists == null)
-        //        {
-
-        //            var newBarterItems = new BarterTrade
-        //            {
-        //                BarterItemId = viewModelItem.BarterItemId
-        //            };
-
-        //            _context.BarterTrade.Add(newBarterItems);
-        //            await _context.SaveChangesAsync();
-
-        //        }
-
-
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    catch
-        //    {
-        //        return View();
-        //    }
-        //}
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
 
         //// GET: Orders/Edit/5
         //public async Task<ActionResult> Edit(int id)

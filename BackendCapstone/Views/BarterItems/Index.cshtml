@@ -63,9 +63,9 @@
                         <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
                     </a>
                 </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
             }
             <td>
                 <a href="@Url.Action("Details", "Profile",  new { Id = item.AppUserId })">
@@ -82,7 +82,7 @@
                 @Html.DisplayFor(modelItem => item.Value)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.AppUser.Location)
+                <a href='@Url.Action("Search","Home")?searchBar=@item.AppUser.Location'>@item.AppUser.Location</a>
             </td>
         </tr>
 }

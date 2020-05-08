@@ -10,8 +10,6 @@ namespace BackendCapstone.Models.ViewModels.Trades
 {
     public class TradeWithItemsViewModel
     {
-        [Key]
-        public int BarterTradeId { get; set; }
 
         [Required]
         public int TradeId { get; set; }
@@ -20,6 +18,7 @@ namespace BackendCapstone.Models.ViewModels.Trades
         public Trade Trade { get; set; }
 
         public List<BarterItemSelectViewModel> SelectedItems { get; set; }
+
 
         //count of barterItems value 
     }

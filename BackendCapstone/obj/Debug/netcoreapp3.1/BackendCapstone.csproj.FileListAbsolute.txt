@@ -455,4 +455,4 @@ C:\Users\info\Source\Repos\BackendCapstone\BackendCapstone\obj\Debug\netcoreapp3
 C:\Users\info\Source\Repos\BackendCapstone\BackendCapstone\obj\Debug\netcoreapp3.1\BackendCapstone.genruntimeconfig.cache
 C:\Users\info\Source\Repos\BackendCapstone\BackendCapstone\obj\Debug\netcoreapp3.1\BackendCapstone.csprojAssemblyReference.cache
 C:\Users\info\Source\Repos\BackendCapstone\BackendCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Trades\Trade.cshtml.g.cs
-C:\Users\info\Source\Repos\BackendCapstone\BackendCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Trades\Index.cshtml.g.cs
+C:\Users\info\Source\Repos\BackendCapstone\BackendCapstone\obj\Debug\netcoreapp3.1\Razor\Views\Trades\Details.cshtml.g.cs

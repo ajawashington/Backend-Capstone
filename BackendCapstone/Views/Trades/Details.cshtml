@@ -1,0 +1,108 @@
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+<h1>Your Trade to @Model.Trade.Receiver.TagName.</h1>
+
+@*maybe this button can be a view to render users to request*@
+@*<p>
+        <a asp-action="Create" asp-controller="Trade">Create New Request</a>
+    </p>*@
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Trade.Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trade.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trade.DateCompleted)
+            </th>
+            <th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <td>
+        @Html.DisplayFor(model => model.Trade.Message)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Trade.DateCreated)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Trade.DateCompleted)
+    </td>
+
+    @foreach (var item in Model.AssociatedTrades)
+    {
+        <tr>
+
+            <table>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.BarterItem.Title)
+                </td>
+            </table>
+
+
+        </tr>
+    }
+    <td>
+        Total Trade Value
+    </td>
+    <td>
+        @Model.TotalTradeValue
+    </td>
+        </tbody>
+    </table>
+
+<table>
+
+    @if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.SenderId)
+    {
+        @if (Model.Trade.IsCompleted == false)
+        {
+
+            <td>
+                Waiting for @Model.Trade.Receiver.TagName's Response
+            </td>
+
+        }
+        else
+        {
+            <td>
+               Trade Completed
+            </td>
+        }
+
+    }
+    else
+    {
+
+        <a asp-controller="Trades" asp-action="Complete" asp-route-id="@Model.TradeId">
+            @Html.ActionLink("Complete Trade", // <-- Link text
+               "Complete", // <-- Action Method Name
+               "Trades", // <-- Controller Name
+               new { Id = Model.TradeId }, // <-- Route value
+               null // <-- htmlArguments
+               )
+        </a>
+
+    }
+
+</table>
+
+    @*<td>
+            <a asp-action="Edit" asp-route-id="@item.TradeId">Edit</a> |
+            <a asp-action="Details" asp-route-id="@item.TradeId">Details</a> |
+            <a asp-action="Delete" asp-route-id="@item.TradeId">Delete</a>
+        </td>*@

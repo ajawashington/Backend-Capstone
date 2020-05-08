@@ -48,53 +48,71 @@
     </div>
 
     <table class="table">
-        @foreach (var item in Model.ReceivedTrades)
+
+
+        <thead>
+        <th class="col-sm-2">
+            @Html.DisplayNameFor(model => model.SentTrades)
+        </th>
+        </thead>
+
+        @if (Model.SentTrades != null && UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
         {
 
-            @if (Model.ReceivedTrades != null && UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+            @foreach (var item in Model.SentTrades)
             {
-                <thead>
-                <th class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.ReceivedTrades)
-                </th>
-                </thead>
 
                 <tbody>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Sender.TagName)
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Receiver.TagName, // <-- Link text
+                          "Details", // <-- Action Method Name
+                          "Trades", // <-- Controller Name
+                          new { Id = item.TradeId }, // <-- Route value
+                          null // <-- htmlArguments
+                          )
+                    </a>
                 </td>
                 </tbody>
-
-            }
-            else
-            {
 
             }
         }
-
-
-        @foreach (var item in Model.SentTrades)
+        else
         {
 
-            @if (Model.SentTrades != null && UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+        }
+
+
+        <thead>
+        <th class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReceivedTrades)
+        </th>
+        </thead>
+
+        @if (Model.SentTrades != null && UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+        {
+
+            @foreach (var item in Model.ReceivedTrades)
             {
-                <thead>
-                <th class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.SentTrades)
-                </th>
-                </thead>
 
                 <tbody>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Sender.TagName)
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Sender.TagName, // <-- Link text
+                          "Details", // <-- Action Method Name
+                          "Trades", // <-- Controller Name
+                          new { Id = item.TradeId }, // <-- Route value
+                          null // <-- htmlArguments
+                          )
+                    </a>
                 </td>
                 </tbody>
 
             }
-            else
-            {
+        }
+        else
+        {
 
-            }
         }
 
         <tr>

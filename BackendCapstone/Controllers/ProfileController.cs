@@ -38,7 +38,9 @@ namespace BackendCapstone.Controllers
                 .Where(app => app.Id == user.Id)
                     .Include(bi => bi.MyBarterItems)
                     .Include(bi => bi.ReceivedTrades)
+                        .ThenInclude(t => t.Sender)
                     .Include(bi => bi.SentTrades)
+                        .ThenInclude(t => t.Receiver)
                     .ToListAsync();
 
             var userId = await _context.ApplicationUsers.FirstOrDefaultAsync(app => app.Id == id);

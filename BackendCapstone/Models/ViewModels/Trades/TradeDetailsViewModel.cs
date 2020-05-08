@@ -1,14 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace BackendCapstone.Models.ViewModels.Trades
 {
-    public class TradeValueViewModel
+    public class TradeDetailsViewModel
     {
+        [Required]
+        public int TradeId { get; set; }
 
+        [Required]
         public Trade Trade { get; set; }
+
+        public List<BarterTrade> AssociatedTrades { get; set; }
+
         public double TotalTradeValue
         {
             get
@@ -28,5 +35,7 @@ namespace BackendCapstone.Models.ViewModels.Trades
                 return _totalValue;
             }
         }
+
     }
+
 }

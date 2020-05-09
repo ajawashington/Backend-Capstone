@@ -19,24 +19,5 @@ namespace BackendCapstone.Models.ViewModels.Trades
 
         public List<BarterItemSelectViewModel> SelectedItems { get; set; }
 
-        public double TotalTradeValue
-        {
-            get
-            {
-                double _totalValue = 0;
-
-                if (Trade.BarterTrades != null)
-                {
-
-                    foreach (var barter in Trade.BarterTrades)
-                    {
-                        _totalValue += barter.BarterItem.Value;
-                    }
-
-                }
-
-                return _totalValue;
-            }
-        }
     }
 }

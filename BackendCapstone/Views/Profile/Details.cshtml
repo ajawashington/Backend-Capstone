@@ -7,22 +7,22 @@
 
 
 
-    <div>
+    <table>
 
-        <h1 style="color:goldenrod">@Model.User.TagName</h1>
-        <th>
+        <thead style="color:goldenrod">@Model.User.TagName</thead>
+        <tt>
             @Html.DisplayNameFor(model => model.User.ImagePath)
-        </th>
-        <td>
+        </tt>
+        <tt>
             <img src="~/images/@Model.User.ImagePath" , style="width: 8em; height: auto;">
-        </td>
+        </tt>
         <br />
         <td>
             <a href='@Url.Action("Search","Home")?searchBar=@Model.User.Location'>@Model.User.Location</a>
         </td>
 
 
-    </div>
+    </table>
 
     <div>
 

@@ -5,8 +5,6 @@
 }
 
 <h1>Trade</h1>
-
-<h4>Trade</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -17,10 +15,22 @@
 
             @for (var i = 0; i < Model.SelectedItems.Count; i++)
             {
-                @Html.CheckBoxFor(item => Model.SelectedItems[i].IsSelected)
-                <input type="hidden" asp-for="@Model.SelectedItems[i].BarterItemId"/>
-                <td>@Model.SelectedItems[i].Title</td>
-                <td>@Model.SelectedItems[i].Value</td>
+        <table class="table">
+
+
+
+            <th>@Model.SelectedItems[i].Title</th>
+    
+            <tr>
+                <td>@Model.SelectedItems[i].Description</td>
+                <td>
+                    @Model.SelectedItems[i].Value
+                    @Html.CheckBoxFor(item => Model.SelectedItems[i].IsSelected)
+                    <input type="hidden" asp-for="@Model.SelectedItems[i].BarterItemId" />
+                </td>
+            </tr>
+
+        </table>
             }
 
             <div class="form-group">
@@ -29,8 +39,10 @@
         </form>
     </div>
 </div>
+          @*<h3>
+           Value Total: @Model.ValueCount          </h3>*@
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+@*<div>
+    <a asp-action="Details" asp-controller="Profile" asp-route-id="@Model.Trade.Receiver.Id">Back to List</a>
+</div>*@
 

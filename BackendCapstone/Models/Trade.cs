@@ -33,7 +33,7 @@ namespace BackendCapstone.Models
         public bool IsCompleted { get; set; }
 
         [NotMapped]
-        public List<int> TradeValue { get; set; }
+        public double TradeValue { get; set; }
 
         public virtual ICollection<BarterTrade> BarterTrades { get; set; }
     }

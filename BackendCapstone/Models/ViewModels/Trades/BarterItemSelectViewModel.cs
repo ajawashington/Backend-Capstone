@@ -7,6 +7,7 @@ namespace BackendCapstone.Models.ViewModels.Trades
 {
     public class BarterItemSelectViewModel
     {
+        public BarterItem BarterItem { get; set; }
         public int BarterItemId { get; set; }
         public string ImagePath { get; set; }
         public string Title { get; set; }

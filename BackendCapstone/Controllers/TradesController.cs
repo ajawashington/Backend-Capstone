@@ -31,7 +31,8 @@ namespace BackendCapstone.Controllers
             _userManager = userManager;
         }
 
-        // GET: Trades/Details/5
+        // this is the view for the trade as a whole...
+        // this is viewed by both sender //and reciever, with 
         public async Task<ActionResult> Details(int id)
         {
             
@@ -56,24 +57,33 @@ namespace BackendCapstone.Controllers
 
             return View(viewModel);
 
+
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
         // GET: Trades/Create
         public async Task<ActionResult> Create(string id)
         {
+            var sender = await GetCurrentUserAsync();
+            var receiver = await _userManager.FindByIdAsync(id);
 
-            var receiverId = await _userManager.FindByIdAsync(id);
-            var user = await GetCurrentUserAsync();
+
+            
+            if (id != sender.Id)
+            {
 
             var viewModel = new TradeRequestFormViewModel
             {
-                ReceiverId = receiverId.ToString(),
-                SenderId = user.Id,
+                ReceiverId = receiver.ToString(),
+                SenderId = sender.Id,
                 DateCreated = DateTime.Now
             };
 
             return View(viewModel);
+
+            }
+
+            return View();
         }
     
 
@@ -98,7 +108,7 @@ namespace BackendCapstone.Controllers
                 _context.Trade.Add(trade);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Trade), new { receiverId = trade.ReceiverId, tradeId = trade.TradeId });
+                return RedirectToAction(nameof(Trade), new { receiverId = trade.ReceiverId, tradeId = trade.TradeId, senderId = user.Id});
             }
             catch
             {
@@ -106,13 +116,28 @@ namespace BackendCapstone.Controllers
             }
         }
         // GET: Trades/Edit/5
-        public async Task<ActionResult> Trade(int tradeId, string receiverId, List<int> SelectedItemInput)
+        public async Task<ActionResult> Trade(int tradeId, string receiverId, string senderId)
         {
-            var receiverBarterItems = await _context.BarterItem
-                .Where(bi => bi.AppUserId == receiverId)
-              .ToListAsync();
+            var user = await GetCurrentUserAsync();
 
-            var checkboxItems = receiverBarterItems.Select(cbi => new BarterItemSelectViewModel()
+            List<BarterItem> barterItems = null;
+ 
+            if (user.Id.ToString() == receiverId)
+            {
+                barterItems = await _context.BarterItem
+                .Where(bi => bi.AppUserId == senderId)
+                .Include(bi => bi.AppUser)
+                .ToListAsync();
+
+            }else
+            {
+                barterItems = await _context.BarterItem
+                .Where(bi => bi.AppUserId == receiverId)
+                .Include(bi => bi.AppUser)
+                .ToListAsync();
+
+            }
+          var checkboxItems = barterItems.Select(cbi => new BarterItemSelectViewModel()
             {
                 Title = cbi.Title,
                 Description = cbi.Description,
@@ -123,12 +148,18 @@ namespace BackendCapstone.Controllers
                
             }
             );
-
             var viewModel = new TradeWithItemsViewModel
             {
                 TradeId = tradeId,
-                SelectedItems = checkboxItems.ToList()
+                SelectedItems = checkboxItems.ToList(),
             };
+
+            //if (viewModel.SelectedItems != null)
+            //{
+            //    var senderRequestItems = await _context.BarterItem
+            //    .Where(bi => bi.AppUserId == senderId)
+            //    .Where(bi => bi.AssociatedTrades == barterItems).ToListAsync();
+            //};
 
             return View(viewModel);
         }
@@ -136,71 +167,12 @@ namespace BackendCapstone.Controllers
         // POST: Trades/Trade/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Trade([Bind("SelectedItems,TradeId")] TradeWithItemsViewModel viewModelItem)
+        public async Task<ActionResult> Trade(TradeWithItemsViewModel viewModelItem)
         {
             try
             {
-                var tradeRequestExists = _context.Trade.FirstOrDefault(o => o.TradeId == viewModelItem.TradeId);
-                var barterTradeItems = viewModelItem.SelectedItems.Where(vmi => vmi.IsSelected == true)
-                    .Select(si => new BarterTrade 
-                    { 
-                        BarterItemId = si.BarterItemId,
-                        TradeId = tradeRequestExists.TradeId
-                    });
+                var user = await GetCurrentUserAsync();
 
-                //var tradeValue = new TradeValueViewModel
-                //{
-                //    Trade = tradeRequestExists,
-                //};
-
-                tradeRequestExists.BarterTrades = barterTradeItems.ToList();
-                    
-                    _context.Trade.Update(tradeRequestExists);
-                    await _context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Index));
-            }
-            catch (Exception ex)
-            {
-                return View();
-            }
-        }
-
-        // GET: Trades/Edit/5
-        //public async Task<ActionResult> Complete(int tradeId, string senderId, List<int> SelectedItemInput)
-        //{
-        //    var senderBarterItems = await _context.BarterItem
-        //        .Where(bi => bi.AppUserId == )
-        //      .ToListAsync();
-
-        //    var checkboxItems = receiverBarterItems.Select(cbi => new BarterItemSelectViewModel()
-        //    {
-        //        Title = cbi.Title,
-        //        Description = cbi.Description,
-        //        ImagePath = cbi.ImagePath,
-        //        Value = cbi.Value,
-        //        BarterItemId = cbi.BarterItemId,
-        //        IsSelected = false
-
-        //    }
-        //    );
-
-        //    var viewModel = new TradeWithItemsViewModel
-        //    {
-        //        TradeId = tradeId,
-        //        SelectedItems = checkboxItems.ToList()
-        //    };
-
-        //    return View(viewModel);
-        //}
-
-        // POST: Trades/Trade/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Complete([Bind("SelectedItems,TradeId")] TradeWithItemsViewModel viewModelItem)
-        {
-            try
-            {
                 var tradeRequestExists = _context.Trade.FirstOrDefault(o => o.TradeId == viewModelItem.TradeId);
                 var barterTradeItems = viewModelItem.SelectedItems.Where(vmi => vmi.IsSelected == true)
                     .Select(si => new BarterTrade
@@ -209,17 +181,16 @@ namespace BackendCapstone.Controllers
                         TradeId = tradeRequestExists.TradeId
                     });
 
-                //var tradeValue = new TradeValueViewModel
-                //{
-                //    Trade = tradeRequestExists,
-                //};
 
                 tradeRequestExists.BarterTrades = barterTradeItems.ToList();
+
+                //ViewBag.Total = barterTradeItems.Cast<BarterItemSelectViewModel>().Where(c => c.IsSelected).Sum(c => c.Value);
+
 
                 _context.Trade.Update(tradeRequestExists);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = viewModelItem.TradeId });
             }
             catch (Exception ex)
             {
@@ -227,21 +198,37 @@ namespace BackendCapstone.Controllers
             }
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Complete(TradeDetailsViewModel viewModelItem)
+        {
+            try
+            {
+                var user = await GetCurrentUserAsync();
 
-        //// GET: Orders/Edit/5
-        //public async Task<ActionResult> Edit(int id)
-        //{
-        //    var paymentOptions = await _context.PaymentType
-        //      .Select(pt => new SelectListItem() { Text = pt.Description, Value = pt.PaymentTypeId.ToString() })
-        //      .ToListAsync();
+                var sum = viewModelItem.SenderValue + viewModelItem.ReceiverValue;
+  
 
-        //    var viewModel = new OrderPaymentFormViewModel();
+                var tradeRequestExists = _context.Trade.FirstOrDefault(o => o.TradeId == viewModelItem.TradeId);
+                var completeTrade = new Trade
+                {
+                    IsCompleted = true,
+                    DateCompleted = DateTime.Now,
+                    TradeValue = sum
 
-        //    viewModel.PaymentTypeOptions = paymentOptions;
-        //    viewModel.OrderId = id;
+                };
 
-        //    return View(viewModel);
-        //}
+
+                _context.Trade.Update(tradeRequestExists);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", new { id = viewModelItem.TradeId });
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
 
         // GET: Trades/Delete/5
         public ActionResult Delete(int id)

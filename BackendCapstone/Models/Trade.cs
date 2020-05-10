@@ -32,9 +32,6 @@ namespace BackendCapstone.Models
 
         public bool IsCompleted { get; set; }
 
-        [NotMapped]
-        public double TradeValue { get; set; }
-
         public virtual ICollection<BarterTrade> BarterTrades { get; set; }
     }
 }

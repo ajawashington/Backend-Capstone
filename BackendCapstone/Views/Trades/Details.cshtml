@@ -6,27 +6,27 @@
 
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
-@*maybe this button can be a view to render users to request*@
-@*<p>
-        <a asp-action="Create" asp-controller="Trade">Create New Request</a>
-    </p>*@
 
-@if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.ReceiverId && Model.Trade.IsCompleted == false)
+@if (UserManager.GetUserAsync(User).Result.Id != Model.Trade.SenderId && Model.Trade.IsCompleted == false && Model.SenderValue == 0)
+{
+   
+        <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Complete Trade</a>
+
+}
+@if(UserManager.GetUserAsync(User).Result.Id != Model.Trade.ReceiverId && Model.Trade.IsCompleted == false)
+{
+           <td>
+               Waiting for @Model.Trade.Receiver.TagName's response
+           </td>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.SenderId && Model.Trade.IsCompleted == true)
 {
 
     <h1> Your Trade with @Model.Trade.Receiver.TagName.</h1>
-    <td>
-        Waiting for your @Model.Trade.Receiver.TagName's Response
-    </td>
+    <p>Trade Completed</p>
 
 }
-else
-{
-    <h1>Your Trade with @Model.Trade.Sender.TagName.</h1>
-    <td>
-        <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Complete Trade</a>
-    </td>
-}
+
 
 <table class="table">
     <thead>
@@ -56,13 +56,19 @@ else
     </td>
     </tbody>
 </table>
+
+
 <table class="table">
-    @Model.Trade.Receiver.TagName's items
+    <h5>
+        @Model.Trade.Receiver.TagName's Items
+    </h5>
     @foreach (var item in Model.AssociatedTrades.Where(i => i.Trade.ReceiverId == i.BarterItem.AppUserId))
     {
 
         <tr>
-
+            <td>
+                <img src="~/images/@item.BarterItem.ImagePath" , style="width: 3em; height: auto;">
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BarterItem.Title)
             </td>
@@ -72,13 +78,16 @@ else
 </table>
 
 <table class="table">
-
-    @Model.Trade.Sender.TagName's items
+    <h5>
+        @Model.Trade.Sender.TagName's Items
+    </h5>
     @foreach (var item in Model.AssociatedTrades.Where(i => i.Trade.SenderId == i.BarterItem.AppUserId))
     {
 
         <tr>
-
+            <td>
+                <img src="~/images/@item.BarterItem.ImagePath" , style="width: 3em; height: auto;">
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BarterItem.Title)
             </td>
@@ -93,17 +102,17 @@ else
     </td>
 </table>
 
-@if (Model.SenderValue != 0 && Model.ReceiverValue != 0 && Model.Trade.IsCompleted == false && Model.SenderValue == Model.ReceiverValue)
+@if (Model.SenderValue != 0 && Model.ReceiverValue != 0 && Model.Trade.IsCompleted == false && Model.SenderValue == Model.ReceiverValue && Model.Trade.Sender.Id == UserManager.GetUserAsync(User).Result.Id)
 {
     <h4>
         Would you like you to accept this trade?
     </h4>
-
-    <td>
-     @Html.ActionLink("Yes", "Complete", "Trades")
-       
-    </td>
-
+    <form asp-action="Complete" asp-route-id="@Model.TradeId">
+        <div class="form-group">
+            <input type="hidden" asp-for="Trade.TradeId" value="@Model.TradeId" />
+            <input type="submit" value="Yes" class="btn btn-primary" />
+        </div>
+    </form>
 }
 
 

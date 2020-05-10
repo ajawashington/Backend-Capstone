@@ -144,11 +144,12 @@ namespace BackendCapstone.Controllers
             viewModelItem.Value = barterItem.Value;
             viewModelItem.Quantity = barterItem.Quantity;
             viewModelItem.AppUserId = barterItem.AppUserId;
+            viewModelItem.ImagePath = barterItem.ImagePath;
             viewModelItem.BarterTypeOptions = barterTypeOptions.ToList();
 
             return View(viewModelItem);
         }
- 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(int id, BarterItemFormViewModel viewModelItem)
@@ -163,22 +164,24 @@ namespace BackendCapstone.Controllers
                 itemEdit.IsAvailable = viewModelItem.IsAvailable;
                 itemEdit.Value = viewModelItem.Value;
                 itemEdit.Quantity = viewModelItem.Quantity;
-                itemEdit.ImagePath = viewModelItem.ImagePath;
-
-                if (viewModelItem.ImageFile != null && viewModelItem.ImageFile.Length > 0)
-                {
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetFileName(viewModelItem.ImageFile.FileName);
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
-
-                    itemEdit.ImagePath = fileName;
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+              
+                    if (viewModelItem.ImageFile != null && viewModelItem.ImageFile.Length > 0)
                     {
-                        await viewModelItem.ImageFile.CopyToAsync(stream);
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetFileName(viewModelItem.ImageFile.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+
+                        itemEdit.ImagePath = fileName;
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await viewModelItem.ImageFile.CopyToAsync(stream);
+                        }
+                            
                     }
 
-                }
+
+                
 
                 _context.BarterItem.Update(itemEdit);
                 await _context.SaveChangesAsync();

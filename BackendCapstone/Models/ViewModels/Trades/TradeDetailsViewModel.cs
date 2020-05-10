@@ -16,26 +16,24 @@ namespace BackendCapstone.Models.ViewModels.Trades
 
         public List<BarterTrade> AssociatedTrades { get; set; }
 
-        public double SenderValue
+        public double? SenderValue
         {
             get
             {
                 double _totalValue = 0;
-
+                
                 if (Trade.BarterTrades != null)
                 {
-
                     foreach (var barter in Trade.BarterTrades.Where(i => i.BarterItem.AppUserId == Trade.SenderId))
                     {
                         _totalValue += barter.BarterItem.Value;
                     }
-
                 }
 
                 return _totalValue;
             }
         }
-        public double ReceiverValue
+        public double? ReceiverValue
         {
             get
             {
@@ -43,18 +41,15 @@ namespace BackendCapstone.Models.ViewModels.Trades
 
                 if (Trade.BarterTrades != null)
                 {
-
                     foreach (var barter in Trade.BarterTrades.Where(i => i.BarterItem.AppUserId == Trade.ReceiverId))
                     {
                         _totalValue += barter.BarterItem.Value;
                     }
-
                 }
 
                 return _totalValue;
             }
         }
-
     }
 
 }

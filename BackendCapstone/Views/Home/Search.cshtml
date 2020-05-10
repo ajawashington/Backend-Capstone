@@ -36,42 +36,42 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                @if (item.ImagePath == null)
-                {
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ImagePath)
-                    </td>
-                }
-                else
-                {
-                    <td>
-                        <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
-                            <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
-                        </a>
-                    </td>
-                }
+        <tr>
+            @if (item.ImagePath == null)
+            {
                 <td>
-                    <a href="@Url.Action("Details", "Profile",  new { Id = item.AppUserId })">
-                        @Html.DisplayFor(modelItem => item.AppUser.TagName)
+                    @Html.DisplayFor(modelItem => item.ImagePath)
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
+                        <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
                     </a>
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.BarterType.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AppUser.Location)
-                </td>
-            </tr>
+            }
+            <td>
+                <a href="@Url.Action("Details", "Profile",  new { Id = item.AppUserId })">
+                    @Html.DisplayFor(modelItem => item.AppUser.TagName)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href='@Url.Action("Search","Home")?searchBar=@item.BarterType.Title'>@item.BarterType.Title</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                <a href='@Url.Action("Search","Home")?searchBar=@item.AppUser.Location'>@item.AppUser.Location</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

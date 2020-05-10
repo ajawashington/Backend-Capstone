@@ -13,11 +13,6 @@ namespace BackendCapstone.Models
     public class ApplicationUser : IdentityUser
     {
 
-        public ApplicationUser() 
-        {
-        
-        }
-
         [Required]
         [Display (Name = "Username") ]
         public string TagName { get; set; }
@@ -29,15 +24,14 @@ namespace BackendCapstone.Models
         public string ImagePath { get; set; }
 
         [NotMapped]
+        //would be better to have a viewmodel instead of notMapped prop
         public IFormFile ImageFile { get; set; }
 
      
        public virtual ICollection<BarterItem> MyBarterItems { get; set; }
 
-        [NotMapped]
-        public virtual ICollection<Trade> ReceivedTrades { get; set; }
+       public virtual ICollection<Trade> ReceivedTrades { get; set; }
 
-        [NotMapped]
-        public virtual ICollection<Trade> SentTrades { get; set; }
+       public virtual ICollection<Trade> SentTrades { get; set; }
     }
 }

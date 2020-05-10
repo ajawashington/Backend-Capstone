@@ -195,7 +195,7 @@ namespace BackendCapstone.Migrations
                         column: x => x.SenderId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -253,13 +253,13 @@ namespace BackendCapstone.Migrations
                         column: x => x.TradeId,
                         principalTable: "Trade",
                         principalColumn: "TradeId",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "ImagePath", "Location", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TagName", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "00000000-ffff-ffff-ffff-ffffffffffff", 0, "1d4020c8-58cd-4882-a5b8-e5a6cf964557", "aja@barter.com", true, " ", "Nashville, TN", false, null, "aja@barter.com", "aja@barter.com", "AQAAAAEAACcQAAAAEM7pVVKJ0fxgqTK8kPzrcclnPegqWhH5vpqtdLlZu34vUJwX8s9kCejupei8MFDVvQ==", null, false, "7f434309-a4d9-48e9-9ebb-8803db794577", "Ayejah", false, "aja@barter.com" });
+                values: new object[] { "00000000-ffff-ffff-ffff-ffffffffffff", 0, "138f7e61-4465-44de-826f-65d3165bb945", "aja@barter.com", true, " ", "Nashville, TN", false, null, "aja@barter.com", "aja@barter.com", "AQAAAAEAACcQAAAAECBJnwbZrAUKqjdpGJBMpfR2rS6H/mdNfvQM1z+jXqfump3sM0FB6v5Z/ai/nxHwSQ==", null, false, "7f434309-a4d9-48e9-9ebb-8803db794577", "Ayejah", false, "aja@barter.com" });
 
             migrationBuilder.InsertData(
                 table: "BarterType",

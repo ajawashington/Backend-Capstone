@@ -1,0 +1,43 @@
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeWithItemsViewModel
+
+@{
+    ViewData["Title"] = "Trade";
+}
+
+<h1>Trade</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Trade">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TradeId" />
+
+            @for (var i = 0; i < Model.SelectedItems.Count; i++)
+            {
+                <table class="table">
+                    <th>@Model.SelectedItems[i].Title</th>
+                    <tr>
+                        <td>@Model.SelectedItems[i].Description</td>
+                        <td>@Model.SelectedItems[i].Value</td>
+                        <td>
+                            @Html.CheckBoxFor(item => Model.SelectedItems[i].IsSelected)
+                            <input class="selected" type="hidden" asp-for="@Model.SelectedItems[i].BarterItemId" />
+                        </td>
+                    </tr>
+                </table>
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+@*<div>
+        <a asp-action="Details" asp-controller="Profile" asp-route-id="@Model.Trade.Receiver.Id">Back to List</a>
+    </div>*@
+

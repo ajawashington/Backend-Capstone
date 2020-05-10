@@ -7,95 +7,161 @@
 
 
 
-    <div>
+    <table>
 
-        <h1 style="color:goldenrod">@Model.User.TagName</h1>
-        <th>
+        <thead style="color:goldenrod">@Model.User.TagName</thead>
+        <tt>
             @Html.DisplayNameFor(model => model.User.ImagePath)
-        </th>
-        <td>
+        </tt>
+        <tt>
             <img src="~/images/@Model.User.ImagePath" , style="width: 8em; height: auto;">
-        </td>
+        </tt>
         <br />
         <td>
             <a href='@Url.Action("Search","Home")?searchBar=@Model.User.Location'>@Model.User.Location</a>
         </td>
 
 
+    </table>
+
+    <div>
+
+        <br>
+
+        @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+        {
+
+
+            <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.AppUserId">
+                @Html.ActionLink("Edit Profile Information", // <-- Link text
+                  "Edit", // <-- Action Method Name
+                  "Profile", // <-- Controller Name
+                  new { Id = Model.AppUserId }, // <-- Route value
+                  null // <-- htmlArguments
+                  )
+            </a>
+        }
+        else
+        {
+            <a href="@Url.Action("Create", "Trades",  new { Id = Model.AppUserId })">Make Barter Request</a>
+        }
     </div>
 
-<div>
-
-    <br>
-
-@if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
-{
+    <table class="table">
 
 
-    <a asp-controller="Profile" asp-action="Details" asp-route-id="@Model.AppUserId">
-        @Html.ActionLink("Edit Profile Information", // <-- Link text
-          "Edit", // <-- Action Method Name
-          "Profile", // <-- Controller Name
-          new { Id = Model.AppUserId }, // <-- Route value
-          null // <-- htmlArguments
-          )
-    </a>
-}
-else
-{
-    <form asp-controller="Trades" asp-action="Create">
-        <input type="submit" value="Make Barter Request" class="btn btn-danger" />
-    </form>
-
-}
-</div>
-
-<table class="table">
-
-    <tr>
+        <thead>
         <th class="col-sm-2">
-            @Html.DisplayNameFor(model => model.BarterItems)
+            @Html.DisplayNameFor(model => model.SentTrades)
         </th>
-    </tr>
-    @foreach (var item in Model.BarterItems)
-    {
-        <tbody>
-            <tr>
-                @if (item.ImagePath == null)
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => item.ImagePath)
-                    </th>
-                    <td>
-                        <a asp-controller="BarterItems" asp-action="Details" asp-route-id="@item.BarterItemId">
-                            @Html.ActionLink(item.Title, // <-- Link text
-                            "Details", // <-- Action Method Name
-                            "BarterItems", // <-- Controller Name
-                            new { Id = item.BarterItemId }, // <-- Route value
-                            null // <-- htmlArguments
-                            )
-                        </a>
-                    </td>
-                }
-                else
-                {
+        </thead>
+
+        @if (Model.SentTrades != null && UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+        {
+
+            @foreach (var item in Model.SentTrades)
+            {
+
+                <tbody>
+                <td>
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Receiver.TagName, // <-- Link text
+                          "Details", // <-- Action Method Name
+                          "Trades", // <-- Controller Name
+                          new { Id = item.TradeId }, // <-- Route value
+                          null // <-- htmlArguments
+                          )
+                    </a>
+                </td>
+                </tbody>
+
+            }
+        }
+        else
+        {
+
+        }
 
 
-                    <td>
-                        <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
-                            <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
-                        </a>
+        <thead>
+        <th class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ReceivedTrades)
+        </th>
+        </thead>
 
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                }
+        @if (Model.SentTrades != null && UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+        {
 
-            </tr>
-        </tbody>
-    }
+            @foreach (var item in Model.ReceivedTrades)
+            {
 
-</table>
+                <tbody>
+                <td>
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Sender.TagName, // <-- Link text
+                          "Details", // <-- Action Method Name
+                          "Trades", // <-- Controller Name
+                          new { Id = item.TradeId }, // <-- Route value
+                          null // <-- htmlArguments
+                          )
+                    </a>
+                </td>
+                </tbody>
+
+            }
+        }
+        else
+        {
+
+        }
+
+        <tr>
+            <th class="col-sm-2">
+                @Html.DisplayNameFor(model => model.BarterItems)
+            </th>
+
+        </tr>
+        @foreach (var item in Model.BarterItems)
+        {
+            <tbody>
+                <tr>
+                    @if (item.ImagePath == null)
+                    {
+                        <th>
+                            @Html.DisplayNameFor(model => item.ImagePath)
+                        </th>
+                        <td>
+                            <a asp-controller="BarterItems" asp-action="Details" asp-route-id="@item.BarterItemId">
+                                @Html.ActionLink(item.Title, // <-- Link text
+                                "Details", // <-- Action Method Name
+                                "BarterItems", // <-- Controller Name
+                                new { Id = item.BarterItemId }, // <-- Route value
+                                null // <-- htmlArguments
+                                )
+                            </a>
+                        </td>
+                    }
+                    else
+                    {
+                        <td>
+                            <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
+                                <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
+                            </a>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Title)
+                        </td>
+                    }
+                    @if (UserManager.GetUserAsync(User).Result.Id == item.AppUserId)
+                    {
+                        <td>
+                            <a asp-controller="BarterItems" asp-action="Edit" asp-route-id="@item.BarterItemId">Edit </a>
+                            <a asp-controller="BarterItems" asp-action="Delete" asp-route-id="@item.BarterItemId">Delete</a>
+                        </td>
+                    }
+                </tr>
+            </tbody>
+        }
+    </table>
 
 

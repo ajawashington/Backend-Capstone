@@ -1,0 +1,123 @@
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeDetailsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@if (UserManager.GetUserAsync(User).Result.Id != Model.Trade.SenderId && Model.Trade.IsCompleted == false && Model.SenderValue == 0)
+{
+   
+        <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Complete Trade</a>
+
+}
+@if(UserManager.GetUserAsync(User).Result.Id != Model.Trade.ReceiverId && Model.Trade.IsCompleted == false)
+{
+           <td>
+               Waiting for @Model.Trade.Receiver.TagName's response
+           </td>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.SenderId && Model.Trade.IsCompleted == true)
+{
+
+    <h1> Your Trade with @Model.Trade.Receiver.TagName.</h1>
+    <p>Trade Completed</p>
+
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Trade.Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trade.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Trade.DateCompleted)
+            </th>
+            <th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <td>
+        @Html.DisplayFor(model => model.Trade.Message)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Trade.DateCreated)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Trade.DateCompleted)
+    </td>
+    </tbody>
+</table>
+
+
+<table class="table">
+    <h5>
+        @Model.Trade.Receiver.TagName's Items
+    </h5>
+    @foreach (var item in Model.AssociatedTrades.Where(i => i.Trade.ReceiverId == i.BarterItem.AppUserId))
+    {
+
+        <tr>
+            <td>
+                <img src="~/images/@item.BarterItem.ImagePath" , style="width: 3em; height: auto;">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BarterItem.Title)
+            </td>
+
+        </tr>
+    }
+</table>
+
+<table class="table">
+    <h5>
+        @Model.Trade.Sender.TagName's Items
+    </h5>
+    @foreach (var item in Model.AssociatedTrades.Where(i => i.Trade.SenderId == i.BarterItem.AppUserId))
+    {
+
+        <tr>
+            <td>
+                <img src="~/images/@item.BarterItem.ImagePath" , style="width: 3em; height: auto;">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BarterItem.Title)
+            </td>
+
+        </tr>
+    }
+</table>
+<table>
+    <td>
+        Total Sender Value: @Model.SenderValue
+        Total Receiver Value: @Model.ReceiverValue
+    </td>
+</table>
+
+@if (Model.SenderValue != 0 && Model.ReceiverValue != 0 && Model.Trade.IsCompleted == false && Model.SenderValue == Model.ReceiverValue && Model.Trade.Sender.Id == UserManager.GetUserAsync(User).Result.Id)
+{
+    <h4>
+        Would you like you to accept this trade?
+    </h4>
+    <form asp-action="Complete" asp-route-id="@Model.TradeId">
+        <div class="form-group">
+            <input type="hidden" asp-for="Trade.TradeId" value="@Model.TradeId" />
+            <input type="submit" value="Yes" class="btn btn-primary" />
+        </div>
+    </form>
+}
+
+
+@*<td>
+        <a asp-action="Edit" asp-route-id="@item.TradeId">Edit</a> |
+        <a asp-action="Details" asp-route-id="@item.TradeId">Details</a> |
+        <a asp-action="Delete" asp-route-id="@item.TradeId">Delete</a>
+    </td>*@

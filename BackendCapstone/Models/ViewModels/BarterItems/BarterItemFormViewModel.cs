@@ -46,6 +46,7 @@ namespace BackendCapstone.Models.ViewModels.BarterItems
         public bool IsAvailable { get; set; }
 
         [Required]
+        [Display(Name = "Barter Type")]
         public int BarterTypeId { get; set; }
 
         public BarterType BarterType { get; set; }

@@ -21,9 +21,9 @@ namespace BackendCapstone.Models
         public string Description { get; set; }
 
         [Required]
+        [Display(Name = "Barter Type")]
         public int BarterTypeId { get; set; }
 
-        [Display(Name = "Barter Type")]
         public BarterType BarterType { get; set; }
 
         [Required]
@@ -35,6 +35,7 @@ namespace BackendCapstone.Models
         public string ImagePath { get; set; }
 
         [NotMapped]
+        //would be better to have a viewmodel instead of notMapped prop
         public IFormFile ImageFile { get; set; }
 
         [Required]
@@ -49,7 +50,6 @@ namespace BackendCapstone.Models
         [Display(Name = "Is Available")]
         public bool IsAvailable { get; set; }
 
-        [NotMapped]
         public virtual ICollection<BarterTrade> AssociatedTrades { get; set; }
     }
 }

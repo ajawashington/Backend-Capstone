@@ -34,14 +34,14 @@ namespace BackendCapstone.Controllers
         // GET: BarterItems
         public async Task<IActionResult> Index()
         {
-            //var user = await GetCurrentUserAsync();
-            var products = await _context.BarterItem
-                //.Where(bi => bi.AppUserId == user.Id)
+            var user = await GetCurrentUserAsync();
+            var barterItems = await _context.BarterItem
+                .Where(bi => bi.AppUserId != user.Id)
                 .Include(bi => bi.AppUser)
                 .Include(bi => bi.BarterType)
                 .ToListAsync();
 
-            return View(products);
+            return View(barterItems);
         }
 
         // GET: BarterItems/Details/5
@@ -129,54 +129,70 @@ namespace BackendCapstone.Controllers
         // GET: BarterItems/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var viewModelItem = new BarterItemFormViewModel();
+            var barterItem = await _context.BarterItem.Include(b => b.BarterType).FirstOrDefaultAsync(b => b.BarterItemId == id);
+            var barterTypeOptions = await _context.BarterType
+                .Select(bt => new SelectListItem()
+                {
+                    Text = bt.Title,
+                    Value = bt.BarterTypeId.ToString()
+                }).ToListAsync();
 
-            var barterItem = await _context.BarterItem.FindAsync(id);
-            if (barterItem == null)
-            {
-                return NotFound();
-            }
-            ViewData["AppUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", barterItem.AppUserId);
-            ViewData["BarterTypeId"] = new SelectList(_context.BarterType, "BarterTypeId", "Title", barterItem.BarterTypeId);
-            return View(barterItem);
+            viewModelItem.Title = barterItem.Title;
+            viewModelItem.Description = barterItem.Description;
+            viewModelItem.IsAvailable = barterItem.IsAvailable;
+            viewModelItem.Value = barterItem.Value;
+            viewModelItem.Quantity = barterItem.Quantity;
+            viewModelItem.AppUserId = barterItem.AppUserId;
+            viewModelItem.ImagePath = barterItem.ImagePath;
+            viewModelItem.BarterTypeOptions = barterTypeOptions.ToList();
+
+            return View(viewModelItem);
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BarterItemId,Title,Description,BarterTypeId,AppUserId,ImagePath,Value,Quantity,IsAvailable")] BarterItem barterItem)
+        public async Task<ActionResult> Edit(int id, BarterItemFormViewModel viewModelItem)
         {
-            if (id != barterItem.BarterItemId)
+            try
             {
-                return NotFound();
-            }
+                var itemEdit = await _context.BarterItem.Include(b => b.BarterType).FirstOrDefaultAsync(b => b.BarterItemId == id);
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(barterItem);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BarterItemExists(barterItem.BarterItemId))
+                itemEdit.Title = viewModelItem.Title;
+                itemEdit.Description = viewModelItem.Description;
+                itemEdit.BarterTypeId = viewModelItem.BarterTypeId;
+                itemEdit.IsAvailable = viewModelItem.IsAvailable;
+                itemEdit.Value = viewModelItem.Value;
+                itemEdit.Quantity = viewModelItem.Quantity;
+              
+                    if (viewModelItem.ImageFile != null && viewModelItem.ImageFile.Length > 0)
                     {
-                        return NotFound();
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetFileName(viewModelItem.ImageFile.FileName);
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot\\images", fileName);
+
+                        itemEdit.ImagePath = fileName;
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await viewModelItem.ImageFile.CopyToAsync(stream);
+                        }
+                            
                     }
-                    else
-                    {
-                        throw;
-                    }
-                }
+
+
+                
+
+                _context.BarterItem.Update(itemEdit);
+                await _context.SaveChangesAsync();
+
+
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AppUserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", barterItem.AppUserId);
-            ViewData["BarterTypeId"] = new SelectList(_context.BarterType, "BarterTypeId", "Title", barterItem.BarterTypeId);
-            return View(barterItem);
+            catch
+            {
+                return View();
+            }
         }
 
         // GET: BarterItems/Delete/5

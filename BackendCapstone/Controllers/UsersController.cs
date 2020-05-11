@@ -15,18 +15,27 @@ using System.IO;
 namespace BackendCapstone.Controllers
 {
     [Authorize]
-    public class ProfileController : Controller
+    public class UsersController : Controller
     {
 
         private readonly ApplicationDbContext _context;
 
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ProfileController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UsersController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
 
             _context = context;
             _userManager = userManager;
+        }
+        public async Task<IActionResult> Index()
+        {
+            var user = await GetCurrentUserAsync();
+            var users = await _context.ApplicationUsers
+                .Where(bi => bi.Id != user.Id)
+                .ToListAsync();
+
+            return View(users);
         }
 
         // GET: Profile/Details/5

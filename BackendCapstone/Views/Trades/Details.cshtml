@@ -1,4 +1,4 @@
-﻿@model BackendCapstone.Models.ViewModels.Trades.TradeDetailsViewModel
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeValueViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -7,38 +7,57 @@
 @using Microsoft.AspNetCore.Identity
 @inject UserManager<ApplicationUser> UserManager
 
-@if (UserManager.GetUserAsync(User).Result.Id != Model.Trade.SenderId && Model.Trade.IsCompleted == false && Model.SenderValue == 0)
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.SenderId && Model.SenderValue == 0)
 {
-   
-        <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Complete Trade</a>
-
+    <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Details.Trade.ReceiverId.ToString()&senderId=@Model.Details.Trade.SenderId.ToString()&tradeId=@Model.Details.Trade.TradeId'>Start Trade</a>
 }
-@if(UserManager.GetUserAsync(User).Result.Id != Model.Trade.ReceiverId && Model.Trade.IsCompleted == false)
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.SenderId && Model.SenderValue > 0 && Model.ReceiverValue == 0)
 {
-           <td>
-               Waiting for @Model.Trade.Receiver.TagName's response
-           </td>
+    <td>
+        Waiting for @Model.Details.Trade.Receiver.TagName's response
+    </td>
 }
-@if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.SenderId && Model.Trade.IsCompleted == true)
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.ReceiverId && Model.SenderValue > 0 && Model.ReceiverValue == 0)
 {
+    <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Details.Trade.ReceiverId.ToString()&senderId=@Model.Details.Trade.SenderId.ToString()&tradeId=@Model.Details.Trade.TradeId'>Complete Trade</a>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.ReceiverId && Model.SenderValue > 0 && Model.ReceiverValue > 0 && Model.Details.Trade.Accepted == false)
+{
+    <td>
+        Waiting for @Model.Details.Trade.Sender.TagName's acceptance
+    </td>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.SenderId && Model.SenderValue > 0 && Model.ReceiverValue > 0 && Model.Details.Trade.Accepted == false)
+{
+    <td>
+       Please confirm your trade below to complete
+    </td>
+}
 
-    <h1> Your Trade with @Model.Trade.Receiver.TagName.</h1>
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.SenderId && Model.Details.Trade.IsCompleted == true)
+{
+    <h1> Your Trade with @Model.Details.Trade.Receiver.TagName.</h1>
     <p>Trade Completed</p>
-
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Details.Trade.ReceiverId && Model.Details.Trade.IsCompleted == true)
+{
+    <h1> Your Trade with @Model.Details.Trade.Sender.TagName.</h1>
+    <p>Trade Completed</p>
 }
 
 
 <table class="table">
     <thead>
+
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Trade.Message)
+                @Html.DisplayNameFor(model => model.Details.Trade.Message)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trade.DateCreated)
+                @Html.DisplayNameFor(model => model.Details.Trade.DateCreated)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Trade.DateCompleted)
+                @Html.DisplayNameFor(model => model.Details.Trade.DateCompleted)
             </th>
             <th>
             <th></th>
@@ -46,13 +65,13 @@
     </thead>
     <tbody>
     <td>
-        @Html.DisplayFor(model => model.Trade.Message)
+        @Html.DisplayFor(model => model.Details.Trade.Message)
     </td>
     <td>
-        @Html.DisplayFor(model => model.Trade.DateCreated)
+        @Html.DisplayFor(model => model.Details.Trade.DateCreated)
     </td>
     <td>
-        @Html.DisplayFor(model => model.Trade.DateCompleted)
+        @Html.DisplayFor(model => model.Details.Trade.DateCompleted)
     </td>
     </tbody>
 </table>
@@ -60,17 +79,24 @@
 
 <table class="table">
     <h5>
-        @Model.Trade.Receiver.TagName's Items
+        @Model.Details.Trade.Receiver.TagName's Items
     </h5>
-    @foreach (var item in Model.AssociatedTrades.Where(i => i.Trade.ReceiverId == i.BarterItem.AppUserId))
+    <h6>
+        Total Value Requested: @Model.SenderValue
+    </h6>
+    @foreach (var item in Model.Items.SelectedItems.Where(i => i.BarterItem.AppUserId == Model.Items.Trade.ReceiverId))
     {
-
         <tr>
             <td>
                 <img src="~/images/@item.BarterItem.ImagePath" , style="width: 3em; height: auto;">
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.BarterItem.Title)
+            </td>
+            <td>
+                    @Html.DisplayFor(modelItem => item.RequestedAmount)
+                </td>
+            <td>
             </td>
 
         </tr>
@@ -79,9 +105,12 @@
 
 <table class="table">
     <h5>
-        @Model.Trade.Sender.TagName's Items
+        @Model.Details.Trade.Sender.TagName's Items
     </h5>
-    @foreach (var item in Model.AssociatedTrades.Where(i => i.Trade.SenderId == i.BarterItem.AppUserId))
+    <h6>
+        Total Value Returned: @Model.ReceiverValue
+    </h6>
+    @foreach (var item in Model.Items.SelectedItems.Where(i => i.BarterItem.AppUserId == Model.Items.Trade.SenderId))
     {
 
         <tr>
@@ -91,30 +120,34 @@
             <td>
                 @Html.DisplayFor(modelItem => item.BarterItem.Title)
             </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.RequestedAmount)
+                </td>*@
+            <td>
+            </td>
 
         </tr>
     }
 </table>
 <table>
-    <td>
-        Total Sender Value: @Model.SenderValue
-        Total Receiver Value: @Model.ReceiverValue
-    </td>
+    <tr>
+    </tr>
 </table>
 
-@if (Model.SenderValue != 0 && Model.ReceiverValue != 0 && Model.Trade.IsCompleted == false && Model.SenderValue == Model.ReceiverValue && Model.Trade.Sender.Id == UserManager.GetUserAsync(User).Result.Id)
+@if (Model.SenderValue > 0 && Model.ReceiverValue > 0 && Model.Details.Trade.Accepted == false && Model.SenderValue == Model.ReceiverValue && Model.Details.Trade.Sender.Id == UserManager.GetUserAsync(User).Result.Id)
 {
     <h4>
         Would you like you to accept this trade?
     </h4>
-    <form asp-action="Complete" asp-route-id="@Model.TradeId">
+    <form asp-action="Complete" asp-route-id="@Model.Details.TradeId">
         <div class="form-group">
-            <input type="hidden" asp-for="Trade.TradeId" value="@Model.TradeId" />
+            <input type="hidden" asp-for="Details.Trade.TradeId" value="@Model.Details.TradeId" />
             <input type="submit" value="Yes" class="btn btn-primary" />
         </div>
     </form>
-}
 
+    <a href='@Url.Action("EditTrade", "Trades")?receiverId=@Model.Details.Trade.ReceiverId.ToString()&senderId=@Model.Details.Trade.SenderId.ToString()&tradeId=@Model.Details.Trade.TradeId'>No</a>
+}
 
 @*<td>
         <a asp-action="Edit" asp-route-id="@item.TradeId">Edit</a> |

@@ -19,5 +19,7 @@ namespace BackendCapstone.Models.ViewModels.Trades
 
         public List<BarterItemSelectViewModel> SelectedItems { get; set; }
 
+       
+
     }
 }

@@ -47,19 +47,11 @@ namespace BackendCapstone.Controllers
         // GET: BarterItems/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
             var barterItem = await _context.BarterItem
                 .Include(b => b.AppUser)
                 .Include(b => b.BarterType)
                 .FirstOrDefaultAsync(m => m.BarterItemId == id);
-            if (barterItem == null)
-            {
-                return NotFound();
-            }
 
             return View(barterItem);
         }
@@ -187,7 +179,7 @@ namespace BackendCapstone.Controllers
                 await _context.SaveChangesAsync();
 
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = id});
             }
             catch
             {

@@ -35,7 +35,6 @@ namespace BackendCapstone.Controllers
         // this is viewed by both sender //and reciever, with 
         public async Task<ActionResult> Details(int id)
         {
-            
             var trade = await _context.Trade
                 .Where(t => t.TradeId == id)
                 .Include(t => t.Receiver)
@@ -44,17 +43,33 @@ namespace BackendCapstone.Controllers
                 .ThenInclude(bt => bt.BarterItem)
                 .FirstOrDefaultAsync(app => app.TradeId == id);
 
-            var viewModel = new TradeDetailsViewModel
+
+            //var allItems = await _context.BarterItem.ToListAsync();
+
+            var selectedItems = new TradeWithItemsViewModel().SelectedItems;
+            var receiverSelectedItems = from item in selectedItems where item.IsSelected == true && item.BarterItem.AppUserId == trade.SenderId select selectedItems;
+
+            var detailsView = new TradeDetailsViewModel
             {
-                Trade = trade,
                 TradeId = id,
+                Trade = trade,
                 AssociatedTrades = trade.BarterTrades.ToList()
             };
 
-            viewModel.Trade = trade;
-         
-            return View(viewModel);
+            var itemsView = new TradeWithItemsViewModel
+            {
+                TradeId = id,
+                Trade = trade,
+                //SelectedItems = allSelectedItems
+            };
 
+            var valueView = new TradeValueViewModel
+            {
+               Details = detailsView,
+               Items = itemsView
+            };
+
+            return View(valueView);
         }
 
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
@@ -117,17 +132,17 @@ namespace BackendCapstone.Controllers
 
             List<BarterItem> barterItems = null;
  
-            if (user.Id.ToString() == receiverId)
+            if (user.Id.ToString() == senderId)
             {
                 barterItems = await _context.BarterItem
-                .Where(bi => bi.AppUserId == senderId)
+                .Where(bi => bi.AppUserId == receiverId)
                 .Include(bi => bi.AppUser)
                 .ToListAsync();
 
             }else
             {
                 barterItems = await _context.BarterItem
-                .Where(bi => bi.AppUserId == receiverId)
+                .Where(bi => bi.AppUserId == senderId)
                 .Include(bi => bi.AppUser)
                 .ToListAsync();
 
@@ -152,6 +167,8 @@ namespace BackendCapstone.Controllers
             return View(viewModel);
         }
 
+
+
         // POST: Trades/Trade/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -162,6 +179,7 @@ namespace BackendCapstone.Controllers
                 var user = await GetCurrentUserAsync();
 
                 var tradeRequestExists = _context.Trade.FirstOrDefault(o => o.TradeId == viewModelItem.TradeId);
+
                 var barterTradeItems = viewModelItem.SelectedItems.Where(vmi => vmi.IsSelected == true)
                     .Select(si => new BarterTrade
                     {
@@ -170,6 +188,7 @@ namespace BackendCapstone.Controllers
                     });
 
                 tradeRequestExists.BarterTrades = barterTradeItems.ToList();
+
 
                 _context.Trade.Update(tradeRequestExists);
                 await _context.SaveChangesAsync();
@@ -182,16 +201,43 @@ namespace BackendCapstone.Controllers
             }
         }
 
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Complete(int id)
+        public async Task<ActionResult> Complete(int id, TradeWithItemsViewModel viewModelItem)
         {
             try
             {
-                var trade = _context.Trade.FirstOrDefault(o => o.TradeId == id);
+                var trade = await _context.Trade.FirstOrDefaultAsync(b => b.TradeId == id);
 
+                viewModelItem.Trade.Message = trade.Message;
+                viewModelItem.Trade.ReceiverId = trade.ReceiverId;
+                viewModelItem.Trade.SenderId = trade.SenderId;
+                viewModelItem.Trade.DateCreated = trade.DateCreated;
+                viewModelItem.Trade.BarterTrades = trade.BarterTrades;
+                viewModelItem.Trade.Sender = trade.Sender;
+                viewModelItem.Trade.Receiver = trade.Receiver;
+
+
+                trade.Accepted = true;
                 trade.IsCompleted = true;
+
+                //date completed not being added to database 
                 trade.DateCompleted = DateTime.Now;
+
+
+
+                //this is for when you are complete and to update user barterItem stock 
+
+                //foreach (var item in viewModelItem.SelectedItems)
+                //{
+                //    var quantityChange = new BarterItem
+                //    {
+                //        Quantity = item.BarterItem.Quantity - item.RequestedAmount
+                //    };
+
+                //    _context.BarterItem.Update(quantityChange);
+                //};
 
                 _context.Trade.Update(trade);
                 await _context.SaveChangesAsync();
@@ -203,6 +249,13 @@ namespace BackendCapstone.Controllers
                 return RedirectToAction("Details", new { id = id });
             }
         }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<ActionResult> Deny(int id)
+        //{
+         
+        //}
 
         // POST: Trades/Delete/5
         [HttpPost]

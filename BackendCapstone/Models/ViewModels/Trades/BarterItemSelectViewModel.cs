@@ -13,6 +13,7 @@ namespace BackendCapstone.Models.ViewModels.Trades
         public string Title { get; set; }
         public string Description { get; set; }
         public int Value { get; set; }
+        public int RequestedAmount { get; set; }
         public bool IsSelected { get; set; }
     }
 }

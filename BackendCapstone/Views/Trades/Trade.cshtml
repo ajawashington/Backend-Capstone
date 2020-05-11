@@ -19,6 +19,9 @@
                     <tr>
                         <td>@Model.SelectedItems[i].Description</td>
                         <td>@Model.SelectedItems[i].Value</td>
+                        <label asp-for=@Model.SelectedItems[i].RequestedAmount class="control-label"></label>
+                        <input asp-for=@Model.SelectedItems[i].RequestedAmount class="form-control" />
+                        <span asp-validation-for=@Model.SelectedItems[i].RequestedAmount class="text-danger"></span>
                         <td>
                             @Html.CheckBoxFor(item => Model.SelectedItems[i].IsSelected)
                             <input class="selected" type="hidden" asp-for="@Model.SelectedItems[i].BarterItemId" />

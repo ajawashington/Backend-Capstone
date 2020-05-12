@@ -24,14 +24,16 @@ namespace BackendCapstone.Models
         public string ImagePath { get; set; }
 
         [NotMapped]
-        //would be better to have a viewmodel instead of notMapped prop
+        //would be better to have a viewmodel instead NotMapped prop
         public IFormFile ImageFile { get; set; }
 
      
        public virtual ICollection<BarterItem> MyBarterItems { get; set; }
 
-       public virtual ICollection<Trade> ReceivedTrades { get; set; }
+        [Display(Name = "Received Trades")]
+        public virtual ICollection<Trade> ReceivedTrades { get; set; }
 
-       public virtual ICollection<Trade> SentTrades { get; set; }
+        [Display(Name = "Sent Trades")]
+        public virtual ICollection<Trade> SentTrades { get; set; }
     }
 }

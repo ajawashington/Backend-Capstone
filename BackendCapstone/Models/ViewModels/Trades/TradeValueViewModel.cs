@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,7 +8,12 @@ namespace BackendCapstone.Models.ViewModels.Trades
 {
     public class TradeValueViewModel
     {
-        public TradeDetailsViewModel Details { get; set; }
+
+        [Required]
+        public int TradeId { get; set; }
+
+        [Required]
+        public Trade Trade { get; set; }
 
         public TradeWithItemsViewModel Items { get; set; }
 
@@ -17,15 +23,14 @@ namespace BackendCapstone.Models.ViewModels.Trades
             {
                 double _totalValue = 0;
 
-                var selectedItems = Items.SelectedItems.Where(i => i.IsSelected == true);
+                var selectedItems = Items.SenderSelectedItems;
 
-                if (selectedItems != null && Details.Trade.Sender == Items.Trade.Sender)
+                if (selectedItems != null)
                 {
                     foreach (var item in selectedItems)
                     {
                         _totalValue += item.Value * item.RequestedAmount;
 
-                        //selected.RequestedAmount; how can I get this property 
                     }
                 }
 
@@ -38,15 +43,14 @@ namespace BackendCapstone.Models.ViewModels.Trades
             {
                 double _totalValue = 0;
 
-                var selectedItems = Items.SelectedItems.Where(i => i.IsSelected == true);
+                var selectedItems = Items.ReceiverSelectedItems;
 
-                if (selectedItems != null && Details.Trade.Receiver == Items.Trade.Receiver)
+                if (selectedItems != null)
                 {
                     foreach (var item in selectedItems)
                     {
                         _totalValue += item.Value * item.RequestedAmount;
 
-                        //selected.RequestedAmount; how can I get this property 
                     }
                 }
 

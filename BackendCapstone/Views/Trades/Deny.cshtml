@@ -1,0 +1,36 @@
+﻿@model BackendCapstone.Models.Trade
+
+@{
+    ViewData["Title"] = "Deny";
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+<h1>Delete</h1>
+@if (UserManager.GetUserAsync(User).Result.Id == Model.SenderId)
+{
+    <h3>Would you like to delete your trade with @Model.Receiver.TagName?</h3>
+    <form asp-action="CancelTrade">
+        <input type="hidden" asp-for="@Model.TradeId" />
+        <input type="submit" value="Yes" class="btn btn-danger" /> |
+    </form>
+
+
+    <a href='@Url.Action("Trade", "Trades")?receiverId=@Model.ReceiverId.ToString()&senderId=@Model.SenderId.ToString()&tradeId=@Model.TradeId'>No, I would like to edit my trade items</a>
+}
+else
+{
+
+    <h3>Would you like to delete your trade with @Model.Sender.TagName?</h3>
+    <form asp-action="CancelTrade">
+        <input type="hidden" asp-for="@Model.TradeId" />
+        <input type="submit" value="Yes" class="btn btn-danger" /> |
+    </form>
+
+
+    <a href='@Url.Action("Trade", "Trades")?receiverId=@Model.ReceiverId.ToString()&senderId=@Model.SenderId.ToString()&tradeId=@Model.TradeId'>No, I would like to edit my trade items</a>
+}
+<div>
+
+</div>

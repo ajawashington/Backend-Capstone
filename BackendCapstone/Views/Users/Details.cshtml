@@ -26,7 +26,7 @@
             Edit Profile Information
         </a>
     }
-    else
+@if (UserManager.GetUserAsync(User).Result.Id != Model.AppUserId && Model.BarterItems.Where(bt => bt.AppUserId == Model.AppUserId) != null)
     {
         <a type="button" class="btn btn-dark" style="background-color:indianred"
            asp-controller="Trades" asp-action="Create" asp-route-id="@Model.AppUserId">

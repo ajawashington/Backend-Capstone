@@ -15,8 +15,10 @@ namespace BackendCapstone.Models.ViewModels.Profile
         [Display(Name = "Barter Items")]
         public List<BarterItem> BarterItems { get; set; }
 
+        [Display(Name = "Received Trades")]
         public List<Trade> ReceivedTrades { get; set; }
 
+        [Display(Name = "Sent Trades")]
         public List<Trade> SentTrades { get; set; }
     }
 }

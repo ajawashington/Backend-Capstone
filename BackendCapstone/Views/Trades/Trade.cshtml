@@ -4,6 +4,9 @@
     ViewData["Title"] = "Trade";
 }
 
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
 <h1>Trade</h1>
 <hr />
 <div class="row">
@@ -12,22 +15,47 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="TradeId" />
 
-            @for (var i = 0; i < Model.SelectedItems.Count; i++)
+            @if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.SenderId)
             {
-                <table class="table">
-                    <th>@Model.SelectedItems[i].Title</th>
-                    <tr>
-                        <td>@Model.SelectedItems[i].Description</td>
-                        <td>@Model.SelectedItems[i].Value</td>
-                        <label asp-for=@Model.SelectedItems[i].RequestedAmount class="control-label"></label>
-                        <input asp-for=@Model.SelectedItems[i].RequestedAmount class="form-control" />
-                        <span asp-validation-for=@Model.SelectedItems[i].RequestedAmount class="text-danger"></span>
-                        <td>
-                            @Html.CheckBoxFor(item => Model.SelectedItems[i].IsSelected)
-                            <input class="selected" type="hidden" asp-for="@Model.SelectedItems[i].BarterItemId" />
-                        </td>
-                    </tr>
-                </table>
+
+
+                @for (var i = 0; i < Model.SenderSelectedItems.Count; i++)
+                {
+                    <table class="table">
+                        <th>@Model.SenderSelectedItems[i].Title</th>
+                        <tr>
+                            <td>@Model.SenderSelectedItems[i].Description</td>
+                            <td>@Model.SenderSelectedItems[i].Value</td>
+                            <label asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="control-label"></label>
+                            <input asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="form-control" />
+                            <span asp-validation-for=@Model.SenderSelectedItems[i].RequestedAmount class="text-danger"></span>
+                            <td>
+                                @Html.CheckBoxFor(item => Model.SenderSelectedItems[i].IsSelected)
+                                <input class="selected" type="hidden" asp-for="@Model.SenderSelectedItems[i].BarterItemId" />
+                            </td>
+                        </tr>
+                    </table>
+                }
+            }
+            else
+            {
+                @for (var i = 0; i < Model.ReceiverSelectedItems.Count; i++)
+                {
+                    <table class="table">
+                        <th>@Model.ReceiverSelectedItems[i].Title</th>
+                        <tr>
+                            <td>@Model.ReceiverSelectedItems[i].Description</td>
+                            <td>@Model.ReceiverSelectedItems[i].Value</td>
+                            <label asp-for=@Model.ReceiverSelectedItems[i].RequestedAmount class="control-label"></label>
+                            <input asp-for=@Model.ReceiverSelectedItems[i].RequestedAmount class="form-control" />
+                            <span asp-validation-for=@Model.ReceiverSelectedItems[i].RequestedAmount class="text-danger"></span>
+                            <td>
+                                @Html.CheckBoxFor(item => Model.ReceiverSelectedItems[i].IsSelected)
+                                <input class="selected" type="hidden" asp-for="@Model.ReceiverSelectedItems[i].BarterItemId" />
+                            </td>
+                        </tr>
+                    </table>
+                }
             }
 
             <div class="form-group">

@@ -199,6 +199,7 @@ namespace BackendCapstone.Controllers
                 .Include(b => b.AppUser)
                 .Include(b => b.BarterType)
                 .FirstOrDefaultAsync(m => m.BarterItemId == id);
+
             if (barterItem == null)
             {
                 return NotFound();

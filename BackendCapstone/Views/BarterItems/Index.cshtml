@@ -1,0 +1,90 @@
+﻿@model IEnumerable<BackendCapstone.Models.BarterItem>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ImagePath)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser.TagName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BarterType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AppUser.Location)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            @if (item.ImagePath == null)
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImagePath)
+                </td>
+                <td>
+                    <a asp-controller="BarterItems" asp-action="Details" asp-route-id="@item.BarterItemId">
+                        @Html.ActionLink(item.Title, // <-- Link text
+                        "Details", // <-- Action Method Name
+                        "BarterItems", // <-- Controller Name
+                        new { Id = item.BarterItemId }, // <-- Route value
+                        null // <-- htmlArguments
+                        )
+                    </a>
+                </td>
+            }
+            else
+            {
+                <td>
+                    <a href="@Url.Action("Details", "BarterItems",  new { Id = item.BarterItemId })">
+                        <img src="~/images/@item.ImagePath" , style="width: 4em; height: auto;">
+                    </a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+            }
+            <td>
+                <a href="@Url.Action("Details", "Users",  new { Id = item.AppUserId })">
+                    @Html.DisplayFor(modelItem => item.AppUser.TagName)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a href='@Url.Action("Search","Home")?searchBar=@item.BarterType.Title'>@item.BarterType.Title</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+                <a href='@Url.Action("Search","Home")?searchBar=@item.AppUser.Location'>@item.AppUser.Location</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -6,16 +6,23 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using BackendCapstone.Models;
+using Microsoft.AspNetCore.Authorization;
+using BackendCapstone.Data;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BackendCapstone.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            _logger = logger;
+            _context = context;
+            _userManager = userManager;
         }
 
         public IActionResult Index()
@@ -23,11 +30,27 @@ namespace BackendCapstone.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public async Task<ActionResult> Search(string searchBar)
         {
+
+            if (searchBar != null)
+            {
+                var barterItems = await _context.BarterItem
+                .Where(b =>
+                 b.Title.Contains(searchBar) && b.IsAvailable == true ||
+                 b.Description.Contains(searchBar) && b.IsAvailable == true ||
+                 b.AppUser.Location.Contains(searchBar) && b.IsAvailable == true ||
+                 b.AppUser.TagName.Contains(searchBar) && b.IsAvailable == true ||
+                 b.BarterType.Title.Contains(searchBar) && b.IsAvailable == true)
+                 .Include(b => b.BarterType)
+                 .Include(b => b.AppUser)
+                 .ToListAsync();
+
+                return View(barterItems);
+            }
+
             return View();
         }
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {

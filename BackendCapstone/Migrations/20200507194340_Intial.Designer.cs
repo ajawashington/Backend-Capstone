@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendCapstone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200505204719_Intial")]
+    [Migration("20200507194340_Intial")]
     partial class Intial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -101,7 +101,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d4020c8-58cd-4882-a5b8-e5a6cf964557",
+                            ConcurrencyStamp = "138f7e61-4465-44de-826f-65d3165bb945",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -109,7 +109,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM7pVVKJ0fxgqTK8kPzrcclnPegqWhH5vpqtdLlZu34vUJwX8s9kCejupei8MFDVvQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAECBJnwbZrAUKqjdpGJBMpfR2rS6H/mdNfvQM1z+jXqfump3sM0FB6v5Z/ai/nxHwSQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -227,6 +227,20 @@ namespace BackendCapstone.Migrations
                     b.HasIndex("TradeId");
 
                     b.ToTable("BarterTrade");
+
+                    b.HasData(
+                        new
+                        {
+                            BarterTradeId = 1,
+                            BarterItemId = 3,
+                            TradeId = 4
+                        },
+                        new
+                        {
+                            BarterTradeId = 2,
+                            BarterItemId = 4,
+                            TradeId = 4
+                        });
                 });
 
             modelBuilder.Entity("BackendCapstone.Models.BarterType", b =>
@@ -304,6 +318,35 @@ namespace BackendCapstone.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Trade");
+
+                    b.HasData(
+                        new
+                        {
+                            TradeId = 3,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsCompleted = false,
+                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
+                            ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                            SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff"
+                        },
+                        new
+                        {
+                            TradeId = 4,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsCompleted = false,
+                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
+                            ReceiverId = "00000000 - ffff - ffff - ffff - ffffffffffff",
+                            SenderId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400"
+                        },
+                        new
+                        {
+                            TradeId = 5,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsCompleted = false,
+                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
+                            ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                            SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -444,7 +487,7 @@ namespace BackendCapstone.Migrations
             modelBuilder.Entity("BackendCapstone.Models.BarterItem", b =>
                 {
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "AppUser")
-                        .WithMany()
+                        .WithMany("MyBarterItems")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -467,20 +510,20 @@ namespace BackendCapstone.Migrations
                     b.HasOne("BackendCapstone.Models.Trade", "Trade")
                         .WithMany("BarterTrades")
                         .HasForeignKey("TradeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("BackendCapstone.Models.Trade", b =>
                 {
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Receiver")
-                        .WithMany()
+                        .WithMany("ReceivedTrades")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Sender")
-                        .WithMany()
+                        .WithMany("SentTrades")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

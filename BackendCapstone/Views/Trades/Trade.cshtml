@@ -1,0 +1,74 @@
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeWithItemsViewModel
+
+@{
+    ViewData["Title"] = "Trade";
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+<h1>Trade</h1>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Trade">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TradeId" />
+
+            @if (UserManager.GetUserAsync(User).Result.Id == Model.Trade.SenderId)
+            {
+
+
+                @for (var i = 0; i < Model.SenderSelectedItems.Count; i++)
+                {
+                    <table class="table">
+                        <th>@Model.SenderSelectedItems[i].Title</th>
+                        <tr>
+                            <td>@Model.SenderSelectedItems[i].Description</td>
+                            <td>@Model.SenderSelectedItems[i].Value</td>
+                            <label asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="control-label"></label>
+                            <input asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="form-control" />
+                            <span asp-validation-for=@Model.SenderSelectedItems[i].RequestedAmount class="text-danger"></span>
+                            <td>
+                                @Html.CheckBoxFor(item => Model.SenderSelectedItems[i].IsSelected)
+                                <input class="selected" type="hidden" asp-for="@Model.SenderSelectedItems[i].BarterItemId" />
+                            </td>
+                        </tr>
+                    </table>
+                }
+            }
+            else
+            {
+                @for (var i = 0; i < Model.ReceiverSelectedItems.Count; i++)
+                {
+                    <table class="table">
+                        <th>@Model.ReceiverSelectedItems[i].Title</th>
+                        <tr>
+                            <td>@Model.ReceiverSelectedItems[i].Description</td>
+                            <td>@Model.ReceiverSelectedItems[i].Value</td>
+                            <label asp-for=@Model.ReceiverSelectedItems[i].RequestedAmount class="control-label"></label>
+                            <input asp-for=@Model.ReceiverSelectedItems[i].RequestedAmount class="form-control" />
+                            <span asp-validation-for=@Model.ReceiverSelectedItems[i].RequestedAmount class="text-danger"></span>
+                            <td>
+                                @Html.CheckBoxFor(item => Model.ReceiverSelectedItems[i].IsSelected)
+                                <input class="selected" type="hidden" asp-for="@Model.ReceiverSelectedItems[i].BarterItemId" />
+                            </td>
+                        </tr>
+                    </table>
+                }
+            }
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+
+@*<div>
+        <a asp-action="Details" asp-controller="Profile" asp-route-id="@Model.Trade.Receiver.Id">Back to List</a>
+    </div>*@
+

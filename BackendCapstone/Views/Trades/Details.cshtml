@@ -1,0 +1,176 @@
+﻿@model BackendCapstone.Models.ViewModels.Trades.TradeValueViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.SenderValue == 0)
+{
+    <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Items.Trade.ReceiverId.ToString()&senderId=@Model.Items.Trade.SenderId.ToString()&tradeId=@Model.Items.Trade.TradeId'>Start Trade</a>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.SenderValue > 0 && Model.ReceiverValue == 0)
+{
+    <td>
+        Waiting for @Model.Items.Trade.Receiver.TagName's response
+    </td>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.SenderValue > 0 && Model.ReceiverValue > 0 && Model.Items.Trade.Accepted == false)
+{
+    <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Items.Trade.ReceiverId.ToString()&senderId=@Model.Items.Trade.SenderId.ToString()&tradeId=@Model.Items.Trade.TradeId'>Complete Trade</a>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.SenderValue > 0 && Model.ReceiverValue > 0 && Model.SenderValue == Model.ReceiverValue && Model.Items.Trade.Accepted == false)
+{
+    <td>
+        Waiting for @Model.Items.Trade.Sender.TagName's acceptance
+    </td>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.SenderValue > 0 && Model.ReceiverValue > 0 && Model.Items.Trade.Accepted == false)
+{
+    <td>
+       Please confirm your trade below to complete
+    </td>
+}
+
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.Items.Trade.IsCompleted == true)
+{
+    <h1> Your Trade with @Model.Items.Trade.Receiver.TagName.</h1>
+    <p>Trade Completed</p>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.Items.Trade.IsCompleted == true)
+{
+    <h1> Your Trade with @Model.Items.Trade.Sender.TagName.</h1>
+    <p>Trade Completed</p>
+}
+
+
+<table class="table">
+    <thead>
+
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.Trade.Message)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.Trade.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Items.Trade.DateCompleted)
+            </th>
+            <th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    <td>
+        @Html.DisplayFor(model => model.Items.Trade.Message)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Items.Trade.DateCreated)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Items.Trade.DateCompleted)
+    </td>
+    </tbody>
+</table>
+
+
+<table class="table">
+    <h5>
+        @Model.Trade.Receiver.TagName's Items
+    </h5>
+    <h6>
+        Total Value Requested: @Model.SenderValue
+    </h6>
+    @foreach (var item in Model.Items.SenderSelectedItems)
+    {
+        <tr>
+            <td>
+                <img src="~/images/@item.ImagePath" , style="width: 3em; height: auto;">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            @if (item.RequestedAmount > 0)
+            {
+
+                <td>
+                    X @Html.DisplayFor(modelItem => item.RequestedAmount)
+                </td>
+
+            }
+            <th>
+                @Html.DisplayNameFor(modelItem => item.Value)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+            <td>
+            </td>
+
+        </tr>
+    }
+    <a href='@Url.Action("Trade", "Trades")?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Edit Items</a>
+</table>
+
+<table class="table">
+    <h5>
+        @Model.Trade.Sender.TagName's Items
+    </h5>
+    <h6>
+        Total Value Returned: @Model.ReceiverValue
+    </h6>
+    @foreach (var item in Model.Items.ReceiverSelectedItems)
+    {
+
+        <tr>
+            <td>
+                <img src="~/images/@item.ImagePath" , style="width: 3em; height: auto;">
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            @if (item.RequestedAmount > 0)
+            {
+                <td>
+                    X @Html.DisplayFor(modelItem => item.RequestedAmount)
+                </td>
+
+            }
+            <th>
+                @Html.DisplayNameFor(modelItem => item.Value)
+            </th>
+            <td>
+                @Html.DisplayFor(modelItem => item.Value)
+            </td>
+        </tr>
+    }
+    <a href='@Url.Action("Trade", "Trades")?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Edit Items</a>
+</table>
+<table>
+    <tr>
+    </tr>
+</table>
+
+@if (Model.SenderValue > 0 && Model.Trade.Accepted == false && Model.SenderValue == Model.ReceiverValue && Model.Trade.Sender.Id == UserManager.GetUserAsync(User).Result.Id)
+{
+    <h4>
+        Would you like you to accept this trade?
+    </h4>
+    <form asp-action="Complete" asp-route-id="@Model.TradeId">
+        <div class="form-group">
+            <input type="hidden" asp-for="Items.TradeId" value="@Model.TradeId" />
+            <input type="submit" value="Yes" class="btn btn-primary" />
+        </div>
+    </form>
+
+    <a href='@Url.Action("Deny", "Trades")?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>No</a>
+}
+
+@*<td>
+        <a asp-action="Edit" asp-route-id="@item.TradeId">Edit</a> |
+        <a asp-action="Items" asp-route-id="@item.TradeId">Items</a> |
+        <a asp-action="Delete" asp-route-id="@item.TradeId">Delete</a>
+    </td>*@

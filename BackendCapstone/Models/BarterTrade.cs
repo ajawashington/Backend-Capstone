@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BackendCapstone.Models
 {
-    public class BarterTrade
+    public class BarterTrade 
     {
         [Key]
         public int BarterTradeId { get; set; }
@@ -16,6 +16,8 @@ namespace BackendCapstone.Models
 
         [Required]
         public BarterItem BarterItem { get; set; }
+
+        public int RequestedAmount { get; set; }
 
         [Required]
         public int TradeId { get; set; }

@@ -1,0 +1,72 @@
+﻿@model BackendCapstone.Models.BarterItem
+
+@{
+    ViewData["Title"] = "Details";
+}
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<ApplicationUser> UserManager
+
+
+<div>
+    <h1>@Html.DisplayFor(model => model.Title)</h1>
+    <hr />
+    <dd class="col-sm-10">
+        <a href="@Url.Action("Details", "Users",  new { Id = Model.AppUserId })">
+            @Html.DisplayFor(modelItem => Model.AppUser.TagName)
+        </a>
+    </dd>
+    <dl class="row">
+        @if (Model.ImagePath == null)
+        {
+
+        }
+        else
+        {
+            <dd class="col-sm-12">
+                <img src="~/images/@Model.ImagePath" style="width: 8em; height: auto;" />
+            </dd>
+        }
+
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.BarterType)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.BarterType.Title)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Value)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Value)
+        </dd>
+        @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+        {
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Quantity)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Quantity)
+            </dd>
+        }
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsAvailable)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsAvailable)
+        </dd>
+    </dl>
+</div>
+<div>
+    @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+    {
+        <a asp-action="Edit" asp-route-id="@Model.BarterItemId">Edit |</a> 
+                                                                         
+    }
+<a asp-action="Index">Back to List</a>
+</div>

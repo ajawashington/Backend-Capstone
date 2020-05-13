@@ -99,7 +99,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d4020c8-58cd-4882-a5b8-e5a6cf964557",
+                            ConcurrencyStamp = "c851010d-217d-464f-b9f4-58529231c7a3",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -107,7 +107,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEM7pVVKJ0fxgqTK8kPzrcclnPegqWhH5vpqtdLlZu34vUJwX8s9kCejupei8MFDVvQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEMg1x2XWBIrt9S5nBx0n3MMLwSmYqdQo+xjf9ALqavPO7dm+jVntePVjmW/e5iBKwA==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -215,6 +215,9 @@ namespace BackendCapstone.Migrations
                     b.Property<int>("BarterItemId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestedAmount")
+                        .HasColumnType("int");
+
                     b.Property<int>("TradeId")
                         .HasColumnType("int");
 
@@ -225,6 +228,22 @@ namespace BackendCapstone.Migrations
                     b.HasIndex("TradeId");
 
                     b.ToTable("BarterTrade");
+
+                    b.HasData(
+                        new
+                        {
+                            BarterTradeId = 1,
+                            BarterItemId = 3,
+                            RequestedAmount = 0,
+                            TradeId = 4
+                        },
+                        new
+                        {
+                            BarterTradeId = 2,
+                            BarterItemId = 4,
+                            RequestedAmount = 0,
+                            TradeId = 4
+                        });
                 });
 
             modelBuilder.Entity("BackendCapstone.Models.BarterType", b =>
@@ -272,6 +291,9 @@ namespace BackendCapstone.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("bit");
+
                     b.Property<DateTime?>("DateCompleted")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
@@ -302,6 +324,38 @@ namespace BackendCapstone.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Trade");
+
+                    b.HasData(
+                        new
+                        {
+                            TradeId = 3,
+                            Accepted = false,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsCompleted = false,
+                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
+                            ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                            SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff"
+                        },
+                        new
+                        {
+                            TradeId = 4,
+                            Accepted = false,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsCompleted = false,
+                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
+                            ReceiverId = "00000000 - ffff - ffff - ffff - ffffffffffff",
+                            SenderId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400"
+                        },
+                        new
+                        {
+                            TradeId = 5,
+                            Accepted = false,
+                            DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            IsCompleted = false,
+                            Message = "Hello, I love your products, Would really like to have some of those mushrooms",
+                            ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
+                            SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -442,7 +496,7 @@ namespace BackendCapstone.Migrations
             modelBuilder.Entity("BackendCapstone.Models.BarterItem", b =>
                 {
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "AppUser")
-                        .WithMany()
+                        .WithMany("MyBarterItems")
                         .HasForeignKey("AppUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -465,20 +519,20 @@ namespace BackendCapstone.Migrations
                     b.HasOne("BackendCapstone.Models.Trade", "Trade")
                         .WithMany("BarterTrades")
                         .HasForeignKey("TradeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("BackendCapstone.Models.Trade", b =>
                 {
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Receiver")
-                        .WithMany()
+                        .WithMany("ReceivedTrades")
                         .HasForeignKey("ReceiverId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Sender")
-                        .WithMany()
+                        .WithMany("SentTrades")
                         .HasForeignKey("SenderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

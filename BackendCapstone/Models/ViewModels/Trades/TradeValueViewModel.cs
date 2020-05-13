@@ -29,7 +29,18 @@ namespace BackendCapstone.Models.ViewModels.Trades
                 {
                     foreach (var item in selectedItems)
                     {
-                        _totalValue += item.Value * item.RequestedAmount;
+
+                        if (item.RequestedAmount > 0)
+                        {
+
+                            _totalValue += item.Value * item.RequestedAmount;
+
+                        }
+                        else
+                        {
+                            _totalValue += item.Value;
+
+                        }
 
                     }
                 }
@@ -49,7 +60,17 @@ namespace BackendCapstone.Models.ViewModels.Trades
                 {
                     foreach (var item in selectedItems)
                     {
+                        if (item.RequestedAmount > 0)
+                        {
+
                         _totalValue += item.Value * item.RequestedAmount;
+
+                        }
+                        else
+                        {
+                            _totalValue += item.Value;
+
+                        }
 
                     }
                 }

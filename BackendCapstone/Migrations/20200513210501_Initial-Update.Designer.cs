@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BackendCapstone.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200507194340_Intial")]
-    partial class Intial
+    [Migration("20200513210501_Initial-Update")]
+    partial class InitialUpdate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -101,7 +101,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "138f7e61-4465-44de-826f-65d3165bb945",
+                            ConcurrencyStamp = "03e22f34-297c-4db8-a847-67a3b33e2f61",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -109,7 +109,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAECBJnwbZrAUKqjdpGJBMpfR2rS6H/mdNfvQM1z+jXqfump3sM0FB6v5Z/ai/nxHwSQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJHeEXAsF9CAPP3zpmY4KjCFwCGstWikHpvT/MrpamLXIMhhhfVJ5FHue2vYrgIA8w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -217,6 +217,9 @@ namespace BackendCapstone.Migrations
                     b.Property<int>("BarterItemId")
                         .HasColumnType("int");
 
+                    b.Property<int>("RequestedAmount")
+                        .HasColumnType("int");
+
                     b.Property<int>("TradeId")
                         .HasColumnType("int");
 
@@ -233,12 +236,14 @@ namespace BackendCapstone.Migrations
                         {
                             BarterTradeId = 1,
                             BarterItemId = 3,
+                            RequestedAmount = 0,
                             TradeId = 4
                         },
                         new
                         {
                             BarterTradeId = 2,
                             BarterItemId = 4,
+                            RequestedAmount = 0,
                             TradeId = 4
                         });
                 });
@@ -288,6 +293,12 @@ namespace BackendCapstone.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<bool>("Accepted")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("DateCompleted")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
@@ -313,6 +324,8 @@ namespace BackendCapstone.Migrations
 
                     b.HasKey("TradeId");
 
+                    b.HasIndex("ApplicationUserId");
+
                     b.HasIndex("ReceiverId");
 
                     b.HasIndex("SenderId");
@@ -323,6 +336,7 @@ namespace BackendCapstone.Migrations
                         new
                         {
                             TradeId = 3,
+                            Accepted = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsCompleted = false,
                             Message = "Hello, I love your products, Would really like to have some of those mushrooms",
@@ -332,6 +346,7 @@ namespace BackendCapstone.Migrations
                         new
                         {
                             TradeId = 4,
+                            Accepted = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsCompleted = false,
                             Message = "Hello, I love your products, Would really like to have some of those mushrooms",
@@ -341,6 +356,7 @@ namespace BackendCapstone.Migrations
                         new
                         {
                             TradeId = 5,
+                            Accepted = false,
                             DateCreated = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             IsCompleted = false,
                             Message = "Hello, I love your products, Would really like to have some of those mushrooms",
@@ -516,6 +532,10 @@ namespace BackendCapstone.Migrations
 
             modelBuilder.Entity("BackendCapstone.Models.Trade", b =>
                 {
+                    b.HasOne("BackendCapstone.Models.ApplicationUser", null)
+                        .WithMany("CompletedTrades")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Receiver")
                         .WithMany("ReceivedTrades")
                         .HasForeignKey("ReceiverId")

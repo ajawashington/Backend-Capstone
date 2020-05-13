@@ -35,5 +35,8 @@ namespace BackendCapstone.Models
 
         [Display(Name = "Sent Trades")]
         public virtual ICollection<Trade> SentTrades { get; set; }
+
+        [Display(Name = "Completed Trades")]
+        public virtual ICollection<Trade> CompletedTrades { get; set; }
     }
 }

@@ -41,69 +41,101 @@
     {
 
 
-    @if (Model.SentTrades != null)
-    {
-        <thead>
-        <th>
-            @Html.DisplayNameFor(model => model.SentTrades)
-        </th>
-        </thead>
-
-        @foreach (var item in Model.SentTrades)
+        @if (Model.SentTrades != null)
         {
-            <tbody>
-            <td>
-                <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
-                    @Html.ActionLink(item.Message, // <-- Link text
-                      "Details", // <-- Action Method Name
-                      "Trades", // <-- Controller Name
-                      new { Id = item.TradeId }, // <-- Route value
-                      null // <-- htmlArguments
-                      )
-                </a>
-            </td>
-            </tbody>
+            <thead>
+            <th>
+                @Html.DisplayNameFor(model => model.SentTrades)
+            </th>
+            </thead>
+
+            @foreach (var item in Model.SentTrades)
+            {
+                <tbody>
+                <td>
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Message, // <-- Link text
+                          "Details", // <-- Action Method Name
+                          "Trades", // <-- Controller Name
+                          new { Id = item.TradeId }, // <-- Route value
+                          null // <-- htmlArguments
+                          )
+                    </a>
+                </td>
+                </tbody>
+            }
+
         }
-    
-    }else
-    {
-
-    }
-
-
-
-    @if (Model.ReceivedTrades != null)
-    {
-        <thead>
-        <th>
-            @Html.DisplayNameFor(model => model.ReceivedTrades)
-        </th>
-        </thead>
-
-        @foreach (var item in Model.ReceivedTrades)
+        else
         {
 
+        }
 
-            <tbody>
-            <td>
-                <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
-                    @Html.ActionLink(item.Message, // <-- Link text
-                   "Details", // <-- Action Method Name
-                   "Trades", // <-- Controller Name
-                   new { Id = item.TradeId }, // <-- Route value
-                   null // <-- htmlArguments
-                   )
-                </a>
-            </td>
-            </tbody>
+        @if (Model.CompletedTrades != null)
+        {
+            <thead>
+            <th>
+                @Html.DisplayNameFor(model => model.CompletedTrades)
+            </th>
+            </thead>
+
+            @foreach (var item in Model.CompletedTrades)
+            {
+
+
+                <tbody>
+                <td>
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Message, // <-- Link text
+                       "Details", // <-- Action Method Name
+                       "Trades", // <-- Controller Name
+                       new { Id = item.TradeId }, // <-- Route value
+                       null // <-- htmlArguments
+                       )
+                    </a>
+                </td>
+                </tbody>
+            }
+        }
+        else
+        {
+
+        }
+
+
+
+        @if (Model.ReceivedTrades != null)
+        {
+            <thead>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceivedTrades)
+            </th>
+            </thead>
+
+            @foreach (var item in Model.ReceivedTrades)
+            {
+
+
+                <tbody>
+                <td>
+                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                        @Html.ActionLink(item.Message, // <-- Link text
+                       "Details", // <-- Action Method Name
+                       "Trades", // <-- Controller Name
+                       new { Id = item.TradeId }, // <-- Route value
+                       null // <-- htmlArguments
+                       )
+                    </a>
+                </td>
+                </tbody>
+            }
+        }
+        else
+        {
+
         }
     }
-    else
-    {
-
-    }
-                    }
-    </table>
+</table>
    
 
 

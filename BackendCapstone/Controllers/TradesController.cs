@@ -342,7 +342,7 @@ namespace BackendCapstone.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CancelTrade(int id,Trade trade)
+        public async Task<ActionResult> CancelTrade(int id, Trade trade)
         {
             try
             {
@@ -361,45 +361,39 @@ namespace BackendCapstone.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Complete(int id, TradeWithItemsViewModel viewModelItem)
+        public async Task<ActionResult> Complete(int id)
         {
             try
             {
-                var trade = await _context.Trade.FirstOrDefaultAsync(b => b.TradeId == id);
+                var trade = await _context.Trade
+                        .Include(bt => bt.BarterTrades)
+                            .ThenInclude(bi => bi.BarterItem)
+                            .FirstOrDefaultAsync(b => b.TradeId == id);
 
-                viewModelItem.Trade.Message = trade.Message;
-                viewModelItem.Trade.ReceiverId = trade.ReceiverId;
-                viewModelItem.Trade.SenderId = trade.SenderId;
-                viewModelItem.Trade.DateCreated = trade.DateCreated;
-                viewModelItem.Trade.BarterTrades = trade.BarterTrades;
-                viewModelItem.Trade.Sender = trade.Sender;
-                viewModelItem.Trade.Receiver = trade.Receiver;
-
+                trade.Message = trade.Message;
+                trade.ReceiverId = trade.ReceiverId;
+                trade.SenderId = trade.SenderId;
+                trade.DateCreated = trade.DateCreated;
+                trade.BarterTrades = trade.BarterTrades;
+                trade.Sender = trade.Sender;
+                trade.Receiver = trade.Receiver;
                 trade.Accepted = true;
                 trade.IsCompleted = true;
-
-                //date completed not being added to database 
                 trade.DateCompleted = DateTime.Now;
 
-
                 //this is for when you are complete and to update user barterItem stock 
-                foreach (var item in viewModelItem.ReceiverSelectedItems)
+                foreach (var item in trade.BarterTrades)
                 {
-                    var quantityChange = new BarterItem
-                    {
-                        Quantity = item.BarterItem.Quantity - item.RequestedAmount
-                    };
+                    var quantityChange = _context.BarterItem.Where(t => t.BarterItemId == item.BarterItem.BarterItemId).FirstOrDefault();
 
-                    _context.BarterItem.Update(quantityChange);
-                    await _context.SaveChangesAsync();
-                };
-
-                foreach (var item in viewModelItem.SenderSelectedItems)
-                {
-                    var quantityChange = new BarterItem
-                    {
-                        Quantity = item.BarterItem.Quantity - item.RequestedAmount
-                    };
+                    quantityChange.Title = item.BarterItem.Title;
+                    quantityChange.Description = item.BarterItem.Description;
+                    quantityChange.BarterTypeId = item.BarterItem.BarterTypeId;
+                    quantityChange.IsAvailable = item.BarterItem.IsAvailable;
+                    quantityChange.Value = item.BarterItem.Value;
+                    quantityChange.Quantity = item.BarterItem.Quantity - item.RequestedAmount;
+                    quantityChange.AppUserId = item.BarterItem.AppUserId;
+                    quantityChange.ImagePath = item.BarterItem.ImagePath;
 
                     _context.BarterItem.Update(quantityChange);
                     await _context.SaveChangesAsync();

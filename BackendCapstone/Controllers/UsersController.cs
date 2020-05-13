@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using BackendCapstone.Data;
+﻿using BackendCapstone.Data;
 using BackendCapstone.Models;
 using BackendCapstone.Models.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace BackendCapstone.Controllers
 {
@@ -43,7 +41,7 @@ namespace BackendCapstone.Controllers
         {
             var user = await _userManager.FindByIdAsync(id);
 
-            var userInfo  = await _context.ApplicationUsers
+            var userInfo = await _context.ApplicationUsers
                 .Where(app => app.Id == user.Id)
                     .Include(bi => bi.MyBarterItems)
                     .Include(bi => bi.ReceivedTrades)
@@ -54,14 +52,16 @@ namespace BackendCapstone.Controllers
 
             var userId = await _context.ApplicationUsers.FirstOrDefaultAsync(app => app.Id == id);
 
+            var completedRequests = user.ReceivedTrades.Concat(user.SentTrades);
+
             var viewModel = new UserProfileViewModel()
             {
                 User = user,
                 AppUserId = userId.Id,
                 BarterItems = userId.MyBarterItems.ToList(),
-                ReceivedTrades = userId.ReceivedTrades.ToList(),
-                SentTrades = userId.SentTrades.ToList()
-
+                ReceivedTrades = userId.ReceivedTrades.Where(t => t.IsCompleted == false).ToList(),
+                SentTrades = userId.SentTrades.Where(t => t.IsCompleted == false).ToList(),
+                CompletedTrades = completedRequests.Where(t => t.IsCompleted == true).ToList()
             };
 
             return View(viewModel);
@@ -79,7 +79,7 @@ namespace BackendCapstone.Controllers
                 Location = user.Location,
                 ImagePath = user.ImagePath
             };
-            
+
             return View(viewModel);
         }
 

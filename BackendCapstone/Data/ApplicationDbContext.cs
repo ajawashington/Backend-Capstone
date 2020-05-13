@@ -52,14 +52,14 @@ namespace BackendCapstone.Data
 
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(au => au.ReceivedTrades)
-                .WithOne(t => t.Receiver);
+                .WithOne(t => t.Receiver)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             modelBuilder.Entity<ApplicationUser>()
                .HasMany(au => au.SentTrades)
-               .WithOne(t => t.Sender);
-
-
-
+               .WithOne(t => t.Sender)
+               .OnDelete(DeleteBehavior.Cascade);
 
 
             ApplicationUser user = new ApplicationUser

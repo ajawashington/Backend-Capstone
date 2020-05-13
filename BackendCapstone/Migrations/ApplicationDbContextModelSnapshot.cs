@@ -99,7 +99,7 @@ namespace BackendCapstone.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c851010d-217d-464f-b9f4-58529231c7a3",
+                            ConcurrencyStamp = "03e22f34-297c-4db8-a847-67a3b33e2f61",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -107,7 +107,7 @@ namespace BackendCapstone.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEMg1x2XWBIrt9S5nBx0n3MMLwSmYqdQo+xjf9ALqavPO7dm+jVntePVjmW/e5iBKwA==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEJHeEXAsF9CAPP3zpmY4KjCFwCGstWikHpvT/MrpamLXIMhhhfVJ5FHue2vYrgIA8w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -294,6 +294,9 @@ namespace BackendCapstone.Migrations
                     b.Property<bool>("Accepted")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("DateCompleted")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("datetime2");
@@ -318,6 +321,8 @@ namespace BackendCapstone.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("TradeId");
+
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("ReceiverId");
 
@@ -525,6 +530,10 @@ namespace BackendCapstone.Migrations
 
             modelBuilder.Entity("BackendCapstone.Models.Trade", b =>
                 {
+                    b.HasOne("BackendCapstone.Models.ApplicationUser", null)
+                        .WithMany("CompletedTrades")
+                        .HasForeignKey("ApplicationUserId");
+
                     b.HasOne("BackendCapstone.Models.ApplicationUser", "Receiver")
                         .WithMany("ReceivedTrades")
                         .HasForeignKey("ReceiverId")

@@ -20,5 +20,8 @@ namespace BackendCapstone.Models.ViewModels.Profile
 
         [Display(Name = "Sent Trades")]
         public List<Trade> SentTrades { get; set; }
+
+        [Display(Name = "Completed Trades")]
+        public List<Trade> CompletedTrades { get; set; }
     }
 }

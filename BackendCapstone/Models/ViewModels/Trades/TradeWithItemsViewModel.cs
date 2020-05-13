@@ -17,9 +17,11 @@ namespace BackendCapstone.Models.ViewModels.Trades
         [Required]
         public Trade Trade { get; set; }
 
-        public List<BarterItemSelectViewModel> SelectedItems { get; set; }
+        public List<BarterItemSelectViewModel> SenderSelectedItems { get; set; }
 
-       
+        public List<BarterItemSelectViewModel> ReceiverSelectedItems { get; set; }
+
+
 
     }
 }

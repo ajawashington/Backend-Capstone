@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace SwapShop.Controllers
 {
+    // add all the comments girl
     [Authorize]
     public class HomeController : Controller
     {

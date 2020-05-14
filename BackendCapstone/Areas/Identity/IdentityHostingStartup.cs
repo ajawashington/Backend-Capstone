@@ -1,6 +1,6 @@
 ﻿using System;
-using BackendCapstone.Data;
-using BackendCapstone.Models;
+using SwapShop.Data;
+using SwapShop.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
@@ -8,8 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-[assembly: HostingStartup(typeof(BackendCapstone.Areas.Identity.IdentityHostingStartup))]
-namespace BackendCapstone.Areas.Identity
+[assembly: HostingStartup(typeof(SwapShop.Areas.Identity.IdentityHostingStartup))]
+namespace SwapShop.Areas.Identity
 {
     public class IdentityHostingStartup : IHostingStartup
     {

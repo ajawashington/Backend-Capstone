@@ -9015,9 +9015,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\BackendCapstone.csproj",
-      "projectName": "BackendCapstone",
-      "projectPath": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\BackendCapstone.csproj",
+      "projectUniqueName": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\SwapShop.csproj",
+      "projectName": "SwapShop",
+      "projectPath": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\SwapShop.csproj",
       "packagesPath": "C:\\Users\\info\\.nuget\\packages\\",
       "outputPath": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\obj\\",
       "projectStyle": "PackageReference",

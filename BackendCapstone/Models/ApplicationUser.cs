@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models
+namespace SwapShop.Models
 {
     public class ApplicationUser : IdentityUser
     {
@@ -35,5 +35,8 @@ namespace BackendCapstone.Models
 
         [Display(Name = "Sent Trades")]
         public virtual ICollection<Trade> SentTrades { get; set; }
+
+        [Display(Name = "Completed Trades")]
+        public virtual ICollection<Trade> CompletedTrades { get; set; }
     }
 }

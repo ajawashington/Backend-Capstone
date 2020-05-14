@@ -5,15 +5,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using BackendCapstone.Data;
-using BackendCapstone.Models;
-using BackendCapstone.Models.ViewModels;
+using SwapShop.Data;
+using SwapShop.Models;
+using SwapShop.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
-using BackendCapstone.Models.ViewModels.BarterItems;
+using SwapShop.Models.ViewModels.BarterItems;
 
-namespace BackendCapstone.Controllers
+namespace SwapShop.Controllers
 {
   
         [Authorize]
@@ -105,6 +105,10 @@ namespace BackendCapstone.Controllers
                         await viewModelItem.ImageFile.CopyToAsync(stream);
                     }
 
+                }else
+                {
+                
+                    /// a default img 
                 }
 
                 _context.BarterItem.Add(barterItem);

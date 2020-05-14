@@ -1,4 +1,4 @@
-﻿@model BackendCapstone.Models.ViewModels.Trades.TradeWithItemsViewModel
+﻿@model SwapShop.Models.ViewModels.Trades.TradeWithItemsViewModel
 
 @{
     ViewData["Title"] = "Trade";
@@ -31,7 +31,7 @@
                             <span asp-validation-for=@Model.SenderSelectedItems[i].RequestedAmount class="text-danger"></span>
                             <td>
                                 @Html.CheckBoxFor(item => Model.SenderSelectedItems[i].IsSelected)
-                                <input class="selected" type="hidden" asp-for="@Model.SenderSelectedItems[i].BarterItemId" />
+                                <input id="selected" type="hidden" asp-for="@Model.SenderSelectedItems[i].BarterItemId" />
                             </td>
                         </tr>
                     </table>

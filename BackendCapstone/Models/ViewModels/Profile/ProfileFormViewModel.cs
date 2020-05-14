@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models.ViewModels.Profile
+namespace SwapShop.Models.ViewModels.Profile
 {
     public class ProfileFormViewModel
     {

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models
+namespace SwapShop.Models
 {
     public class BarterType
     {

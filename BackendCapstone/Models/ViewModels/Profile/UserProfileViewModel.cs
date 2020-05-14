@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models.ViewModels.Profile
+namespace SwapShop.Models.ViewModels.Profile
 {
     public class UserProfileViewModel
     {
@@ -20,5 +20,8 @@ namespace BackendCapstone.Models.ViewModels.Profile
 
         [Display(Name = "Sent Trades")]
         public List<Trade> SentTrades { get; set; }
+
+        [Display(Name = "Completed Trades")]
+        public List<Trade> CompletedTrades { get; set; }
     }
 }

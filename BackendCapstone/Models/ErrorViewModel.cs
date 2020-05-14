@@ -1,6 +1,6 @@
 using System;
 
-namespace BackendCapstone.Models
+namespace SwapShop.Models
 {
     public class ErrorViewModel
     {

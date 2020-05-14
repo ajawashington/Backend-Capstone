@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models.ViewModels.Trades
+namespace SwapShop.Models.ViewModels.Trades
 {
     public class BarterItemSelectViewModel
     {

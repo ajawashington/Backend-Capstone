@@ -107,9 +107,8 @@ namespace SwapShop.Controllers
 
                 }else
                 {
-                    var filePath = Path.Combine("wwwroot\\images", "SWAPSHOPpath.png");
-
-                    barterItem.ImagePath = filePath;
+                
+                    /// a default img 
                 }
 
                 _context.BarterItem.Add(barterItem);

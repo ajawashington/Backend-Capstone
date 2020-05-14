@@ -11,29 +11,29 @@
 {
     <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Items.Trade.ReceiverId.ToString()&senderId=@Model.Items.Trade.SenderId.ToString()&tradeId=@Model.Items.Trade.TradeId'>Start Trade</a>
 }
-@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.ReceiverValue != Model.SenderValue && Model.Items.Trade.Accepted == false)
+@if (Model.ReceiverValue != Model.SenderValue && Model.Items.Trade.Accepted == false)
 {
     <td>
-        Waiting for @Model.Items.Trade.Receiver.TagName's response
+        Waiting for response
+    </td>
+}
+@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.ReceiverValue == Model.SenderValue && Model.Items.Trade.Accepted == false)
+{
+    <td>
+        Waiting for response
     </td>
 }
 @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.ReceiverValue == 0 && Model.Items.Trade.IsCompleted == false)
 {
     <a href='@Url.Action("Trade","Trades" )?receiverId=@Model.Items.Trade.ReceiverId.ToString()&senderId=@Model.Items.Trade.SenderId.ToString()&tradeId=@Model.Items.Trade.TradeId'>Complete Trade</a>
-}
-@if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.SenderValue != Model.ReceiverValue && Model.Items.Trade.Accepted == false)
-{
-    <td>
-        Waiting for @Model.Items.Trade.Sender.TagName's acceptance
-    </td>
+
 }
 @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.SenderValue == Model.ReceiverValue && Model.Items.Trade.Accepted == false)
 {
     <td>
-       Please confirm your trade below to complete
+        Please confirm your trade below to complete
     </td>
 }
-
 @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.Items.Trade.IsCompleted == true)
 {
     <h1> Your Trade with @Model.Items.Trade.Receiver.TagName.</h1>
@@ -78,7 +78,7 @@
 
 
 <table class="table">
-    @if (Model.Items.SenderSelectedItems.Count > 0 && Model.Items.Trade.IsCompleted == false)
+    @if (Model.Items.SenderSelectedItems.Count > 0)
     {
         <h5>
             @Model.Trade.Receiver.TagName's Items
@@ -88,34 +88,47 @@
         </h6>
         @foreach (var item in Model.Items.SenderSelectedItems)
         {
-            <tr>
-                <td>
-                    <img src="~/images/@item.ImagePath" , style="width: 3em; height: auto;">
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                @if (item.RequestedAmount > 0)
-                {
+<tr>
+    <td>
+        <img src="~/images/@item.ImagePath" , style="width: 3em; height: auto;">
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Description)
+    </td>
+    @if (item.RequestedAmount > 0)
+    {
 
-                    <td>
-                        X @Html.DisplayFor(modelItem => item.RequestedAmount)
-                    </td>
+        <td>
+            X @Html.DisplayFor(modelItem => item.RequestedAmount)
+        </td>
 
-                }
-                <th>
-                    @Html.DisplayNameFor(modelItem => item.Value)
-                </th>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Value)
-                </td>
-                <td>
-                </td>
+    }
+    <th>
+        @Html.DisplayNameFor(modelItem => item.Value)
+    </th>
+    <td>
+        @Html.DisplayFor(modelItem => item.Value)
+    </td>
+    <td>
+    </td>
 
-            </tr>
+    @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.Items.Trade.IsCompleted == false)
+    {
+<td>
+
+
+    <form asp-action="DeleteItem" asp-route-id="@item.BarterItemId">
+        <div class="form-group">
+            <input type="hidden" asp-for="@Model.TradeId" value="@Model.TradeId" />
+            <input type="submit" value="Delete" class="btn btn-primary" />
+        </div>
+    </form>
+</td>
+    }
+</tr>
         }
         @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.SenderId && Model.Items.Trade.IsCompleted == false)
         {
@@ -123,10 +136,10 @@
         }
     }
 
-    </table>
+</table>
 
 <table class="table">
-    @if (Model.Items.ReceiverSelectedItems.Count > 0 && Model.Items.Trade.IsCompleted == false)
+    @if (Model.Items.ReceiverSelectedItems.Count > 0)
     {
 
         <h5>
@@ -138,6 +151,7 @@
         @foreach (var item in Model.Items.ReceiverSelectedItems)
         {
 
+
             <tr>
                 <td>
                     <img src="~/images/@item.ImagePath" , style="width: 3em; height: auto;">
@@ -161,6 +175,18 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
+            @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.Items.Trade.IsCompleted == false)
+            {
+                <td>
+
+                    <form asp-action="DeleteItem" asp-route-id="@item.BarterItemId">
+                        <div class="form-group">
+                            <input type="hidden" asp-for="@Model.TradeId" value="@Model.TradeId" />
+                            <input type="submit" value="Delete" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </td>
+            }
             </tr>
         }
         @if (UserManager.GetUserAsync(User).Result.Id == Model.Items.Trade.ReceiverId && Model.Items.Trade.IsCompleted == false)
@@ -168,7 +194,7 @@
             <a href='@Url.Action("Trade", "Trades")?receiverId=@Model.Trade.ReceiverId.ToString()&senderId=@Model.Trade.SenderId.ToString()&tradeId=@Model.Trade.TradeId'>Edit Items</a>
         }
     }
-    </table>
+</table>
 <table>
     <tr>
     </tr>

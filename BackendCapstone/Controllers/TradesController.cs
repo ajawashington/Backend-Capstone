@@ -261,97 +261,41 @@ namespace SwapShop.Controllers
 
         }
 
-        public async Task<ActionResult> DeleteItem(int tradeId, string receiverId, string senderId)
-        {
-            //find current user logged in 
-            var user = await GetCurrentUserAsync();
-
-            var trade = await _context.Trade
-          .Include(t => t.Receiver).Where(r => r.ReceiverId == receiverId)
-          .Include(t => t.Sender).Where(r => r.SenderId == senderId)
-          .Include(t => t.BarterTrades)
-          .ThenInclude(bt => bt.BarterItem)
-          .ThenInclude(bt => bt.AppUser)
-          .FirstOrDefaultAsync(tad => tad.TradeId == tradeId);
-
-            if (trade.BarterTrades != null)
-            {
-                if (trade.ReceiverId == user.Id)
-                {
-                    var removeReceiverSelectedItems = await _context.BarterTrade
-                                                      .Where(bt => bt.BarterItem.AppUserId == trade.SenderId)
-                                                      .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
-
-                    _context.BarterTrade.Remove(removeReceiverSelectedItems);
-                    await _context.SaveChangesAsync();
-                }
-
-                if (trade.SenderId == user.Id)
-                {
-                    var removeSenderSelectedItems = await _context.BarterTrade
-                                                            .Where(bt => bt.BarterItem.AppUserId == trade.ReceiverId)
-                                                            .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
-
-                    _context.BarterTrade.Remove(removeSenderSelectedItems);
-                    await _context.SaveChangesAsync();
-                }
-            }
-                return View(trade);
-        }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> EditItems(int tradeId, string receiverId, string senderId)
-        {
-
-            var user = await GetCurrentUserAsync();
-
-            //this is getting the trade that we are passing through  
-            var trade = _context.Trade
-                        .Include(b => b.BarterTrades)
-                        .FirstOrDefault(o => o.TradeId == tradeId);
-
-            //if the user who is logged in and wants to choose new trade items, 
-            //it should delete the items the user requested and allow for a new choice of options 
-            if (trade.BarterTrades != null)
-            {
-                if (trade.ReceiverId == user.Id)
-                {
-                    var removeReceiverSelectedItems = await _context.BarterTrade
-                                                      .Where(bt => bt.BarterItem.AppUserId == senderId)
-                                                      .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
-
-                    _context.BarterTrade.Remove(removeReceiverSelectedItems);
-                    await _context.SaveChangesAsync();
-                }
-
-                if (trade.SenderId == user.Id)
-                {
-                    var removeSenderSelectedItems = await _context.BarterTrade
-                                                            .Where(bt => bt.BarterItem.AppUserId == receiverId)
-                                                            .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
-
-                    _context.BarterTrade.Remove(removeSenderSelectedItems);
-                    await _context.SaveChangesAsync();
-                }
-            }
-       
-                return View(trade);
- 
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> CancelTrade(int id, Trade trade)
+        public async Task<ActionResult> DeleteItem(int id, Trade trade)
         {
             try
             {
-                var tradeToCancel = await _context.Trade.FirstOrDefaultAsync(o => o.TradeId == id);
+
+
+                var requestedItem = await _context.BarterTrade.Where(o => o.BarterItemId == id && o.TradeId == trade.TradeId).FirstOrDefaultAsync();
+
+                _context.BarterTrade.Remove(requestedItem);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction("Details", new { id = trade.TradeId });
+            }
+            catch (Exception ex)
+            {
+                return View();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> CancelTrade(Trade trade)
+        {
+            try
+            {
+                var user = await GetCurrentUserAsync();
+
+                var tradeToCancel = await _context.Trade.FirstOrDefaultAsync(o => o.TradeId == trade.TradeId);
 
                 _context.Trade.Remove(tradeToCancel);
                 await _context.SaveChangesAsync();
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details" ,"Users", new { id = user.Id  });
             }
             catch (Exception ex)
             {
@@ -366,6 +310,8 @@ namespace SwapShop.Controllers
             try
             {
                 var trade = await _context.Trade.Where(b => b.TradeId == id)
+                        .Include(bt => bt.Sender)
+                        .Include(bt => bt.Receiver)
                         .Include(bt => bt.BarterTrades)
                             .ThenInclude(bi => bi.BarterItem)
                             .FirstOrDefaultAsync();

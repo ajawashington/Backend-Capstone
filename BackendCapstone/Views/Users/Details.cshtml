@@ -66,11 +66,11 @@
     @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId && Model.CompletedTrades.Count > 0)
     {
 
-        <thead>
+
         <th>
             @Html.DisplayNameFor(model => model.CompletedTrades)
         </th>
-        </thead>
+
 
         @foreach (var item in Model.CompletedTrades)
         {
@@ -90,13 +90,14 @@
             </tbody>
         }
     }
+
     @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId && Model.ReceivedTrades.Count > 0)
     {
-            <thead>
+ 
             <th>
                 @Html.DisplayNameFor(model => model.ReceivedTrades)
             </th>
-            </thead>
+ 
 
             @foreach (var item in Model.ReceivedTrades)
             {

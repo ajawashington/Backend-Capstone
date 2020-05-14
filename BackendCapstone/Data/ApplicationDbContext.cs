@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using BackendCapstone.Models;
+using SwapShop.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace BackendCapstone.Data
+namespace SwapShop.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
@@ -54,7 +54,6 @@ namespace BackendCapstone.Data
                 .HasMany(au => au.ReceivedTrades)
                 .WithOne(t => t.Receiver)
                 .OnDelete(DeleteBehavior.Cascade);
-
 
             modelBuilder.Entity<ApplicationUser>()
                .HasMany(au => au.SentTrades)
@@ -105,96 +104,6 @@ namespace BackendCapstone.Data
                 }
 
             );
-
-            modelBuilder.Entity<BarterItem>().HasData(
-                new BarterItem()
-                {
-                    BarterItemId = 1,
-                    BarterTypeId = 3,
-                    AppUserId = user.Id,
-                    Description = "keep your kids entertained",
-                    Title = "Dance Lessons",
-                    Quantity = 100,
-                    Value = 2
-                },
-                   new BarterItem()
-                   {
-                       BarterItemId = 2,
-                       BarterTypeId = 2,
-                       AppUserId = user.Id,
-                       Description = "It dips low",
-                       Title = "Boat",
-                       Quantity = 100,
-                       Value = 3
-                   },
-                   new BarterItem()
-                   {
-                       BarterItemId = 3,
-                       BarterTypeId = 1,
-                       AppUserId = user.Id,
-                       Description = "feed your family",
-                       Title = "Potatoe",
-                       Quantity = 100,
-                       Value = 4
-                   },
-                  new BarterItem()
-                  {
-                      BarterItemId = 4,
-                      BarterTypeId = 4,
-                      AppUserId = user.Id,
-                      Description = "It flies high",
-                      Title = "Kite",
-                      Quantity = 100,
-                      Value = 5
-                  }
-            );
-            modelBuilder.Entity<Trade>().HasData(
-
-             new Trade()
-             {
-
-                 TradeId = 3,
-                 ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
-                 SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff",
-                 Message = "Hello, I love your products, Would really like to have some of those mushrooms"
-             },
-             new Trade()
-             {
-
-                 TradeId = 4,
-                 ReceiverId = "00000000 - ffff - ffff - ffff - ffffffffffff",
-                 SenderId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
-                 Message = "Hello, I love your products, Would really like to have some of those mushrooms"
-             },
-             new Trade()
-             {
-
-                 TradeId = 5,
-                 ReceiverId = "3c44096a-bfe3-4bc0-ab01-16b7d8eaa400",
-                 SenderId = "00000000 - ffff - ffff - ffff - ffffffffffff",
-                 Message = "Hello, I love your products, Would really like to have some of those mushrooms"
-             }
-             );
-
-            modelBuilder.Entity<BarterTrade>().HasData(
-
-               new BarterTrade()
-               {
-
-                   BarterTradeId = 1,
-                   BarterItemId = 3,
-                   TradeId = 4
-               },
-               new BarterTrade()
-               {
-
-                   BarterTradeId = 2,
-                   BarterItemId = 4,
-                   TradeId = 4
-               }
-              );
-
-
 
         }
     }

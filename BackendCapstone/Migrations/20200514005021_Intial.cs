@@ -1,9 +1,9 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace BackendCapstone.Migrations
+namespace SwapShop.Migrations
 {
-    public partial class InitialUpdate : Migration
+    public partial class Intial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -187,6 +187,12 @@ namespace BackendCapstone.Migrations
                 {
                     table.PrimaryKey("PK_Trade", x => x.TradeId);
                     table.ForeignKey(
+                        name: "FK_Trade_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
                         name: "FK_Trade_AspNetUsers_ReceiverId",
                         column: x => x.ReceiverId,
                         principalTable: "AspNetUsers",
@@ -262,7 +268,7 @@ namespace BackendCapstone.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "ImagePath", "Location", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TagName", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "00000000-ffff-ffff-ffff-ffffffffffff", 0, "03e22f34-297c-4db8-a847-67a3b33e2f61", "aja@barter.com", true, " ", "Nashville, TN", false, null, "aja@barter.com", "aja@barter.com", "AQAAAAEAACcQAAAAEJHeEXAsF9CAPP3zpmY4KjCFwCGstWikHpvT/MrpamLXIMhhhfVJ5FHue2vYrgIA8w==", null, false, "7f434309-a4d9-48e9-9ebb-8803db794577", "Ayejah", false, "aja@barter.com" });
+                values: new object[] { "00000000-ffff-ffff-ffff-ffffffffffff", 0, "99af2c7a-0f50-44c1-877c-bf75363a35c4", "aja@barter.com", true, " ", "Nashville, TN", false, null, "aja@barter.com", "aja@barter.com", "AQAAAAEAACcQAAAAEPehQOT6///W6UV7Q16GSTJCPnIYecqH02uXzIzi8KM+sQrl3uxt7n3HCsrDWDGx/g==", null, false, "7f434309-a4d9-48e9-9ebb-8803db794577", "Ayejah", false, "aja@barter.com" });
 
             migrationBuilder.InsertData(
                 table: "BarterType",
@@ -275,16 +281,6 @@ namespace BackendCapstone.Migrations
                     { 4, "Commissions" }
                 });
 
-            migrationBuilder.InsertData(
-                table: "BarterItem",
-                columns: new[] { "BarterItemId", "AppUserId", "BarterTypeId", "Description", "ImagePath", "IsAvailable", "Quantity", "Title", "Value" },
-                values: new object[,]
-                {
-                    { 3, "00000000-ffff-ffff-ffff-ffffffffffff", 1, "feed your family", null, false, 100, "Potatoe", 4 },
-                    { 2, "00000000-ffff-ffff-ffff-ffffffffffff", 2, "It dips low", null, false, 100, "Boat", 3 },
-                    { 1, "00000000-ffff-ffff-ffff-ffffffffffff", 3, "keep your kids entertained", null, false, 100, "Dance Lessons", 2 },
-                    { 4, "00000000-ffff-ffff-ffff-ffffffffffff", 4, "It flies high", null, false, 100, "Kite", 5 }
-                });
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -343,6 +339,11 @@ namespace BackendCapstone.Migrations
                 name: "IX_BarterTrade_TradeId",
                 table: "BarterTrade",
                 column: "TradeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Trade_ApplicationUserId",
+                table: "Trade",
+                column: "ApplicationUserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Trade_ReceiverId",

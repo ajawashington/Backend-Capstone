@@ -1,4 +1,4 @@
-﻿@model BackendCapstone.Models.ViewModels.Profile.UserProfileViewModel
+﻿@model SwapShop.Models.ViewModels.Profile.UserProfileViewModel
 @{
     ViewData["Title"] = "Details";
 }
@@ -37,75 +37,61 @@
 </div>
 
 <table class="table">
-    @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId)
+    @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId && Model.SentTrades.Count > 0)
     {
 
+        <th>
+            @Html.DisplayNameFor(model => model.SentTrades)
+        </th>
 
-        @if (Model.SentTrades != null)
+
+        @foreach (var item in Model.SentTrades)
         {
-            <thead>
-            <th>
-                @Html.DisplayNameFor(model => model.SentTrades)
-            </th>
-            </thead>
-
-            @foreach (var item in Model.SentTrades)
-            {
-                <tbody>
-                <td>
-                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
-                        @Html.ActionLink(item.Message, // <-- Link text
-                          "Details", // <-- Action Method Name
-                          "Trades", // <-- Controller Name
-                          new { Id = item.TradeId }, // <-- Route value
-                          null // <-- htmlArguments
-                          )
-                    </a>
-                </td>
-                </tbody>
-            }
-
-        }
-        else
-        {
-
+            <tbody>
+            <td>
+                <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                    @Html.ActionLink(item.Message, // <-- Link text
+                      "Details", // <-- Action Method Name
+                      "Trades", // <-- Controller Name
+                      new { Id = item.TradeId }, // <-- Route value
+                      null // <-- htmlArguments
+                      )
+                </a>
+            </td>
+            </tbody>
         }
 
-        @if (Model.CompletedTrades != null)
+    }
+
+    @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId && Model.CompletedTrades.Count > 0)
+    {
+
+        <thead>
+        <th>
+            @Html.DisplayNameFor(model => model.CompletedTrades)
+        </th>
+        </thead>
+
+        @foreach (var item in Model.CompletedTrades)
         {
-            <thead>
-            <th>
-                @Html.DisplayNameFor(model => model.CompletedTrades)
-            </th>
-            </thead>
-
-            @foreach (var item in Model.CompletedTrades)
-            {
 
 
-                <tbody>
-                <td>
-                    <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
-                        @Html.ActionLink(item.Message, // <-- Link text
-                       "Details", // <-- Action Method Name
-                       "Trades", // <-- Controller Name
-                       new { Id = item.TradeId }, // <-- Route value
-                       null // <-- htmlArguments
-                       )
-                    </a>
-                </td>
-                </tbody>
-            }
+            <tbody>
+            <td>
+                <a asp-controller="Trades" asp-action="Details" asp-route-id="@item.TradeId">
+                    @Html.ActionLink(item.Message, // <-- Link text
+                   "Details", // <-- Action Method Name
+                   "Trades", // <-- Controller Name
+                   new { Id = item.TradeId }, // <-- Route value
+                   null // <-- htmlArguments
+                   )
+                </a>
+            </td>
+            </tbody>
         }
-        else
-        {
-
-        }
-
-
-
-        @if (Model.ReceivedTrades != null)
-        {
+    }
+    @if (UserManager.GetUserAsync(User).Result.Id == Model.AppUserId && Model.ReceivedTrades.Count > 0)
+    {
             <thead>
             <th>
                 @Html.DisplayNameFor(model => model.ReceivedTrades)
@@ -130,18 +116,14 @@
                 </tbody>
             }
         }
-        else
-        {
-
-        }
-    }
+       
 </table>
    
 
 
 <table class="table">
 
-    @if (Model.BarterItems != null)
+    @if (Model.BarterItems.Count > 0)
     {
         <tr>
             <th>
@@ -169,6 +151,9 @@
                   )
                             </a>
                         </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
                     }
                     else
                     {
@@ -180,7 +165,11 @@
                         <td>
                             @Html.DisplayFor(modelItem => item.Title)
                         </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
                     }
+
                     @if (UserManager.GetUserAsync(User).Result.Id == item.AppUserId)
                     {
                         <td>
@@ -188,7 +177,7 @@
                             <a asp-controller="BarterItems" asp-action="Delete" asp-route-id="@item.BarterItemId">Delete</a>
                         </td>
                     }
-                    
+
                 </tr>
             </tbody>
                     }

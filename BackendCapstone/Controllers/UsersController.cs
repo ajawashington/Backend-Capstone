@@ -1,6 +1,6 @@
-﻿using BackendCapstone.Data;
-using BackendCapstone.Models;
-using BackendCapstone.Models.ViewModels.Profile;
+﻿using SwapShop.Data;
+using SwapShop.Models;
+using SwapShop.Models.ViewModels.Profile;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Controllers
+namespace SwapShop.Controllers
 {
     [Authorize]
     public class UsersController : Controller

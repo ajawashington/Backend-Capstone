@@ -5,13 +5,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using BackendCapstone.Models;
+using SwapShop.Models;
 using Microsoft.AspNetCore.Authorization;
-using BackendCapstone.Data;
+using SwapShop.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace BackendCapstone.Controllers
+namespace SwapShop.Controllers
 {
     [Authorize]
     public class HomeController : Controller

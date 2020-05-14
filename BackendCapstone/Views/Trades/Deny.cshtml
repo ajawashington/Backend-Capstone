@@ -1,4 +1,4 @@
-﻿@model BackendCapstone.Models.Trade
+﻿@model SwapShop.Models.Trade
 
 @{
     ViewData["Title"] = "Deny";
@@ -17,7 +17,7 @@
     </form>
 
 
-    <a href='@Url.Action("Trade", "Trades")?receiverId=@Model.ReceiverId.ToString()&senderId=@Model.SenderId.ToString()&tradeId=@Model.TradeId'>No, I would like to edit my trade items</a>
+    <a href='@Url.Action("EditItems", "Trades")?receiverId=@Model.ReceiverId.ToString()&senderId=@Model.SenderId.ToString()&tradeId=@Model.TradeId'>No, I would like to edit my trade items</a>
 }
 else
 {

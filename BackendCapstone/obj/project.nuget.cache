@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "+xETG3vNDHeyl6An5Q/Jz1qt0SUOUj8C3ib54HxEneYe45StJL2/XD5UUPZO/gqGlZpGfp5XtJW0J63L1VEm3A==",
+  "dgSpecHash": "cjwukjESYSpPhLErBusOED1VZXbGKKl7E83E5XelrogAdfxUc7w/RFY/YAHUhIEgObg32ed4JQHA8dBEoEi2AA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\BackendCapstone.csproj",
+  "projectFilePath": "C:\\Users\\info\\Source\\Repos\\BackendCapstone\\BackendCapstone\\SwapShop.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\info\\.nuget\\packages\\microsoft.aspnetcore.cryptography.internal\\3.1.3\\microsoft.aspnetcore.cryptography.internal.3.1.3.nupkg.sha512",
     "C:\\Users\\info\\.nuget\\packages\\microsoft.aspnetcore.cryptography.keyderivation\\3.1.3\\microsoft.aspnetcore.cryptography.keyderivation.3.1.3.nupkg.sha512",

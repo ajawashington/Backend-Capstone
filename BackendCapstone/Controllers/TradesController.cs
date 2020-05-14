@@ -4,9 +4,9 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Security.Authentication.ExtendedProtection;
 using System.Threading.Tasks;
-using BackendCapstone.Data;
-using BackendCapstone.Models;
-using BackendCapstone.Models.ViewModels.Trades;
+using SwapShop.Data;
+using SwapShop.Models;
+using SwapShop.Models.ViewModels.Trades;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.View;
 
-namespace BackendCapstone.Controllers
+namespace SwapShop.Controllers
 {
     [Authorize]
     public class TradesController : Controller
@@ -149,9 +149,9 @@ namespace BackendCapstone.Controllers
             List<BarterItem> barterItems = null;
 
             //this is getting the trade that we are passing through  
-            var trade = _context.Trade
+            var trade = await _context.Trade
                         .Include(b => b.BarterTrades)
-                        .FirstOrDefault(o => o.TradeId == tradeId);
+                        .FirstOrDefaultAsync(o => o.TradeId == tradeId);
 
             //that empty list of barter items is populated with the users items here 
             if (user.Id.ToString() == senderId)
@@ -201,7 +201,7 @@ namespace BackendCapstone.Controllers
                 var user = await GetCurrentUserAsync();
 
                 //find the existing trade the user is working with 
-                var tradeRequestExists = _context.Trade.FirstOrDefault(o => o.TradeId == viewModelItem.TradeId);
+                var tradeRequestExists = await _context.Trade.FirstOrDefaultAsync(o => o.TradeId == viewModelItem.TradeId);
                 
                 //this says the trade on the viewModel is the current trade we got 
                 viewModelItem.Trade = tradeRequestExists;
@@ -278,9 +278,9 @@ namespace BackendCapstone.Controllers
             {
                 if (trade.ReceiverId == user.Id)
                 {
-                    var removeReceiverSelectedItems = _context.BarterTrade
+                    var removeReceiverSelectedItems = await _context.BarterTrade
                                                       .Where(bt => bt.BarterItem.AppUserId == trade.SenderId)
-                                                      .FirstOrDefault(bt => bt.TradeId == tradeId);
+                                                      .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
 
                     _context.BarterTrade.Remove(removeReceiverSelectedItems);
                     await _context.SaveChangesAsync();
@@ -288,9 +288,9 @@ namespace BackendCapstone.Controllers
 
                 if (trade.SenderId == user.Id)
                 {
-                    var removeSenderSelectedItems = _context.BarterTrade
+                    var removeSenderSelectedItems = await _context.BarterTrade
                                                             .Where(bt => bt.BarterItem.AppUserId == trade.ReceiverId)
-                                                            .FirstOrDefault(bt => bt.TradeId == tradeId);
+                                                            .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
 
                     _context.BarterTrade.Remove(removeSenderSelectedItems);
                     await _context.SaveChangesAsync();
@@ -317,9 +317,9 @@ namespace BackendCapstone.Controllers
             {
                 if (trade.ReceiverId == user.Id)
                 {
-                    var removeReceiverSelectedItems = _context.BarterTrade
-                                                      .Where(bt => bt.BarterItem.AppUserId == trade.SenderId)
-                                                      .FirstOrDefault(bt => bt.TradeId == tradeId);
+                    var removeReceiverSelectedItems = await _context.BarterTrade
+                                                      .Where(bt => bt.BarterItem.AppUserId == senderId)
+                                                      .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
 
                     _context.BarterTrade.Remove(removeReceiverSelectedItems);
                     await _context.SaveChangesAsync();
@@ -327,9 +327,9 @@ namespace BackendCapstone.Controllers
 
                 if (trade.SenderId == user.Id)
                 {
-                    var removeSenderSelectedItems = _context.BarterTrade
-                                                            .Where(bt => bt.BarterItem.AppUserId == trade.ReceiverId)
-                                                            .FirstOrDefault(bt => bt.TradeId == tradeId);
+                    var removeSenderSelectedItems = await _context.BarterTrade
+                                                            .Where(bt => bt.BarterItem.AppUserId == receiverId)
+                                                            .FirstOrDefaultAsync(bt => bt.TradeId == tradeId);
 
                     _context.BarterTrade.Remove(removeSenderSelectedItems);
                     await _context.SaveChangesAsync();
@@ -365,42 +365,29 @@ namespace BackendCapstone.Controllers
         {
             try
             {
-                var trade = await _context.Trade
+                var trade = await _context.Trade.Where(b => b.TradeId == id)
                         .Include(bt => bt.BarterTrades)
                             .ThenInclude(bi => bi.BarterItem)
-                            .FirstOrDefaultAsync(b => b.TradeId == id);
-
-                trade.Message = trade.Message;
-                trade.ReceiverId = trade.ReceiverId;
-                trade.SenderId = trade.SenderId;
-                trade.DateCreated = trade.DateCreated;
-                trade.BarterTrades = trade.BarterTrades;
-                trade.Sender = trade.Sender;
-                trade.Receiver = trade.Receiver;
+                            .FirstOrDefaultAsync();
+                
                 trade.Accepted = true;
                 trade.IsCompleted = true;
                 trade.DateCompleted = DateTime.Now;
+
+                _context.Trade.Attach(trade);
+                await _context.SaveChangesAsync();
+
 
                 //this is for when you are complete and to update user barterItem stock 
                 foreach (var item in trade.BarterTrades)
                 {
                     var quantityChange = _context.BarterItem.Where(t => t.BarterItemId == item.BarterItem.BarterItemId).FirstOrDefault();
-
-                    quantityChange.Title = item.BarterItem.Title;
-                    quantityChange.Description = item.BarterItem.Description;
-                    quantityChange.BarterTypeId = item.BarterItem.BarterTypeId;
-                    quantityChange.IsAvailable = item.BarterItem.IsAvailable;
-                    quantityChange.Value = item.BarterItem.Value;
+                    
                     quantityChange.Quantity = item.BarterItem.Quantity - item.RequestedAmount;
-                    quantityChange.AppUserId = item.BarterItem.AppUserId;
-                    quantityChange.ImagePath = item.BarterItem.ImagePath;
 
                     _context.BarterItem.Update(quantityChange);
                     await _context.SaveChangesAsync();
                 };
-
-                _context.Trade.Update(trade);
-                await _context.SaveChangesAsync();
 
                 return RedirectToAction("Details", new { id = id});
             }

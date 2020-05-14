@@ -5,7 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BackendCapstone.Models.ViewModels.Trades
+namespace SwapShop.Models.ViewModels.Trades
 {
     public class TradeDetailsViewModel
     {

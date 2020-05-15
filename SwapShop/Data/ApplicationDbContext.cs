@@ -30,8 +30,9 @@ namespace SwapShop.Data
 
             modelBuilder.Entity<Trade>()
                .Property(b => b.DateCompleted)
-               .HasDefaultValueSql("GETDATE()");
+               .HasColumnType("datetime");
 
+       
             // Restrict deletion of related order when OrderBarters entry is removed
             modelBuilder.Entity<Trade>()
                 .HasMany(o => o.BarterTrades)

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SwapShop.Data;
 
 namespace SwapShop.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200515192902_DateComplete")]
+    partial class DateComplete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -234,7 +236,7 @@ namespace SwapShop.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8d31883c-1d86-4b37-9b55-ffeeebafc41d",
+                            ConcurrencyStamp = "e5d7b766-5d08-49a6-8ec6-5e1ae587a2aa",
                             Email = "aja@barter.com",
                             EmailConfirmed = true,
                             ImagePath = " ",
@@ -242,7 +244,7 @@ namespace SwapShop.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "aja@barter.com",
                             NormalizedUserName = "aja@barter.com",
-                            PasswordHash = "AQAAAAEAACcQAAAAEB9dgoCNvjoLKPORhiwkvjHbHVP7XzWyOpE7eylcKMJM4xh2HdfWlAbSN45rsb/qmg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEGBT2XYCL8DSuxNoWXplJ/l3RgZQFsDF+NBunvmOqlqf2DuTlYhkK0qP+H/FzqAIMg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TagName = "Ayejah",
@@ -372,8 +374,7 @@ namespace SwapShop.Migrations
 
                     b.Property<DateTime?>("DateCompleted")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2")
-                        .HasComputedColumnSql("GETDATE()");
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DateCreated")
                         .ValueGeneratedOnAddOrUpdate()

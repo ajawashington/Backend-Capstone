@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
+using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using System.Threading.Tasks;
 
 namespace SwapShop.Models.ViewModels.BarterItems
@@ -33,11 +35,11 @@ namespace SwapShop.Models.ViewModels.BarterItems
 
         public IFormFile ImageFile { get; set; }
 
-        [Required]
-        [Range(1, 5, ErrorMessage = "Value must be between 1 - 5")]
-        [Display(Name = "Value", Description = "5 point scale, 1 - 3 abundant, 4 - 5 sacre")]
+
+        [Range(1, 3, ErrorMessage = "Value must be between 1 - 3")]
+        [Display(Name = "Value", Description = "1 - abundant | 2 - balanced | 3 - scarce")]
         public int Value { get; set; }
-        //"scarce" (4-5) or "abundant (1-3)"
+
 
         [Required]
         public int Quantity { get; set; }

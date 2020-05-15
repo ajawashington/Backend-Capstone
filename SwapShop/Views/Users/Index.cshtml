@@ -6,25 +6,22 @@
 
 <h1>Community</h1>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.TagName)
-            </th>
-    </thead>
-    <tbody>
+
+
+
         @foreach (var item in Model)
 
         {
-            <tr>
-        <td>
-            <a href="@Url.Action("Details", "Users",  new { Id = item.Id })">
-                @Html.DisplayFor(modelItem => item.TagName)
-            </a>
-        </td>
+<div class="flex-wrap" style="flex-direction:column; display:inline-flex">
+    <div class="card text-white bg-info m-3" style="max-width: 20rem; align-content:center; text-align: center">
 
-        </tr>
+        <a href="@Url.Action("Details", "Users",  new { Id = item.Id })">
+            <img src="~/images/@item.ImagePath" , style="width: 20em; height: auto;">
+        </a>
+        <br />
+        <a href="@Url.Action("Details", "Users",  new { Id = item.Id })">
+            @Html.DisplayFor(modelItem => item.TagName)
+        </a>
+    </div>
+</div>
     }
-        </tbody>
-    </table>

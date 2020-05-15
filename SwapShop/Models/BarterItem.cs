@@ -24,6 +24,7 @@ namespace SwapShop.Models
         [Display(Name = "Barter Type")]
         public int BarterTypeId { get; set; }
 
+        [Display(Name = "Barter Type")]
         public BarterType BarterType { get; set; }
 
         [Required]
@@ -39,8 +40,8 @@ namespace SwapShop.Models
         public IFormFile ImageFile { get; set; }
 
         [Required]
-        [Range(1, 5, ErrorMessage = "Value must be between 1 - 5")]
-        [Display(Name = "Value", Description = "5 point scale, 1 - 3 abundant, 4 - 5 sacre")]
+        [Range(1, 3, ErrorMessage = "Value must be between 1 - 3")]
+        [Display(Name = "Value" , Description = "1 - abundant | 2 - balanced | 3 - scarce")]
         public int Value { get; set; }
         //"scarce" (4-5) or "abundant (1-3)"
 

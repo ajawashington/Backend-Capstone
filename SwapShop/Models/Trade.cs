@@ -24,9 +24,11 @@ namespace SwapShop.Models
 
         [DataType(DataType.Date)]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        [Display(Name = "Date Created")]
         public DateTime DateCreated { get; set; }
 
         [DataType(DataType.Date)]
+        [Display(Name = "Date Completed")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? DateCompleted { get; set; }
 

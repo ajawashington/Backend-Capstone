@@ -10,6 +10,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200514162012_Update.cs" />
     <Compile Remove="Migrations\20200514162012_Update.Designer.cs" />
+    <Compile Remove="Migrations\20200515193726_DateCompletedCorrect.cs" />
+    <Compile Remove="Migrations\20200515193726_DateCompletedCorrect.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

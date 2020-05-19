@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using System.IO;
 using SwapShop.Models.ViewModels.BarterItems;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc;
 
 namespace SwapShop.Controllers
 {
@@ -36,7 +37,7 @@ namespace SwapShop.Controllers
         {
             var user = await GetCurrentUserAsync();
             var barterItems = await _context.BarterItem
-                .Where(bi => bi.AppUserId != user.Id)
+                .Where(bi => bi.AppUserId != user.Id && bi.IsAvailable == true)
                 .Include(bi => bi.AppUser)
                 .Include(bi => bi.BarterType)
                 .ToListAsync();
@@ -91,6 +92,11 @@ namespace SwapShop.Controllers
                     AppUserId = user.Id,
 
                 };
+
+                if (viewModelItem.Quantity == 0)
+                {
+                    viewModelItem.IsAvailable = false;
+                }
                 
                 if (viewModelItem.ImageFile != null && viewModelItem.ImageFile.Length > 0)
                 {
@@ -176,8 +182,10 @@ namespace SwapShop.Controllers
                             
                     }
 
-
-                
+                if (viewModelItem.Quantity == 0)
+                {
+                    itemEdit.IsAvailable = false;
+                }
 
                 _context.BarterItem.Update(itemEdit);
                 await _context.SaveChangesAsync();

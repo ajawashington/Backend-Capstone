@@ -137,6 +137,7 @@
         @foreach (var item in Model.BarterItems)
         {
             <tbody>
+
                 <tr>
                     @if (item.ImagePath == null)
                     {
@@ -181,9 +182,15 @@
                         </td>
                     }
 
+                @if (item.IsAvailable == false)
+                {
+                <td>
+                    Not Available for Trade
+                </td>
+            }
                 </tr>
-            </tbody>
-                    }
-        
+                </tbody>
+            }
+
     }
 </table>

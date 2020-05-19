@@ -68,10 +68,10 @@
             <br />
             <br />
             <td>
-                (@Html.DisplayFor(modelItem => item.Value))
+                <a href='@Url.Action("Search","Home")?searchBar=@item.Value'>(@item.Value)
                 @if (item.Value == 1)
                 {
-                <td>
+                    <td>
                     Abundant
                 </td>
             }
@@ -87,6 +87,7 @@
                         Scarce
                     </td>
                 }
+                    </a>
                 </td>
                 <br />
                 <td>

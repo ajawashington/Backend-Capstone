@@ -26,15 +26,18 @@
                         <tr>
                             <td>@Model.SenderSelectedItems[i].Description</td>
                             <td>@Model.SenderSelectedItems[i].Value</td>
-                            <label asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="control-label"></label>
-                            <input asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="form-control" />
-                            <span asp-validation-for=@Model.SenderSelectedItems[i].RequestedAmount class="text-danger"></span>
                             <td>
                                 @Html.CheckBoxFor(item => Model.SenderSelectedItems[i].IsSelected)
                                 <input id="selected" type="hidden" asp-for="@Model.SenderSelectedItems[i].BarterItemId" />
                             </td>
                         </tr>
                     </table>
+                            <label asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="control-label"></label>
+                            <input asp-for=@Model.SenderSelectedItems[i].RequestedAmount class="form-control" />
+                            <span asp-validation-for=@Model.SenderSelectedItems[i].RequestedAmount class="text-danger"></span>
+                            <br />
+                            <br />
+                            <br/>
                 }
             }
             else

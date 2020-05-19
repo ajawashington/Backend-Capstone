@@ -40,6 +40,7 @@ namespace SwapShop.Controllers
         public async Task<IActionResult> Details(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
+            var currentUser = await GetCurrentUserAsync();
 
             var userInfo = await _context.ApplicationUsers
                 .Where(app => app.Id == user.Id)

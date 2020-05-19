@@ -157,13 +157,13 @@ namespace SwapShop.Controllers
             if (user.Id.ToString() == senderId)
             {
                 barterItems = await _context.BarterItem
-                                    .Where(bi => bi.AppUserId == receiverId)
+                                    .Where(bi => bi.AppUserId == receiverId && bi.IsAvailable == true)
                                     .Include(bi => bi.AppUser)
                                     .ToListAsync();
             }else
             {
                 barterItems = await _context.BarterItem
-                                    .Where(bi => bi.AppUserId == senderId)
+                                    .Where(bi => bi.AppUserId == senderId && bi.IsAvailable == true)
                                     .Include(bi => bi.AppUser)
                                     .ToListAsync();
             }
@@ -328,12 +328,21 @@ namespace SwapShop.Controllers
                 foreach (var item in trade.BarterTrades)
                 {
                     var quantityChange = _context.BarterItem.Where(t => t.BarterItemId == item.BarterItem.BarterItemId).FirstOrDefault();
-                    
                     quantityChange.Quantity = item.BarterItem.Quantity - item.RequestedAmount;
 
                     _context.BarterItem.Update(quantityChange);
                     await _context.SaveChangesAsync();
+              
+                    if (quantityChange.Quantity == 0)
+                {
+                    quantityChange.IsAvailable = false;
+                    _context.BarterItem.Update(quantityChange);
+                    await _context.SaveChangesAsync();
+                }
+
                 };
+
+
 
                 return RedirectToAction("Details", new { id = id});
             }

@@ -336,6 +336,7 @@ namespace SwapShop.Controllers
                     if (quantityChange.Quantity == 0)
                 {
                     quantityChange.IsAvailable = false;
+
                     _context.BarterItem.Update(quantityChange);
                     await _context.SaveChangesAsync();
                 }
